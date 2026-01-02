@@ -20,6 +20,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
+import com.example.anime_recommender.model.Season;
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -195,6 +196,16 @@ public class Anime {
             }
             
         } 
+
+        
+
+        }
+
+        private static class start_season {
+            private int year;
+            private Season season;
+        }
+
 
         private static class Broadcast {
             private String day_of_the_week;

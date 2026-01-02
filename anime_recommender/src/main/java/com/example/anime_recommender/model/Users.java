@@ -13,9 +13,9 @@ public class Users {
     @GeneratedValue(strategy =  GenerationType.IDENTITY )
     private Long id;
     private String userName;
-    private ArrayList<Anime> animeList;
+    private ArrayList<Integer> animeList;
     
-    public Users(String userName, ArrayList<Anime> animeList) {
+    public Users(String userName, ArrayList<Integer> animeList) {
         this.userName = userName;
         this.animeList = animeList;
     }
@@ -25,10 +25,10 @@ public class Users {
     public void setUserName(String userName) {
         this.userName = userName;
     }
-    public ArrayList<Anime> getAnimeList() {
+    public ArrayList<Integer> getAnimeList() {
         return animeList;
     }
-    public void setAnimeList(ArrayList<Anime> animeList) {
+    public void setAnimeList(ArrayList<Integer> animeList) {
         this.animeList = animeList;
     }
 

@@ -40,7 +40,7 @@ public class AnimeApiRequests {
     //Query the MAL data base for all anime
     //This will be iterated through multiple times in sizes of 200 due to the api overload of requests
     @Async
-    public CompletableFuture<AnimeApiResponse> totalAnimeQuery(int currentRank){
+    public CompletableFuture<AnimeApiResponse> seasonal_query(int year, String season){
 
              return webClient.get()
                                             .uri(uriBuilder -> uriBuilder.path("/ranking")
@@ -78,10 +78,10 @@ public class AnimeApiRequests {
         
     }
 
-    public CompletableFuture<ArrayList<Anime>> fetchTotalAnimes(int currentRank) {
+    public CompletableFuture<ArrayList<Anime>> fetchTotalAnimes(int year, String season) {
        
     ArrayList<Anime> animeList = new ArrayList<>();
-       return totalAnimeQuery(currentRank).thenCompose(animes -> {
+       return seasonal_query(year, season).thenCompose(animes -> {
              // Explicitly define the 'animes' variable type as AnimeApiResponse
             AnimeApiResponse animeResponse = animes;
             return CompletableFuture.supplyAsync(() -> {
