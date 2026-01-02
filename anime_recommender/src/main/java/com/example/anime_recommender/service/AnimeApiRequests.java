@@ -13,7 +13,7 @@ import com.example.anime_recommender.repository.AnimeRepository;
 import jakarta.transaction.Transactional;
 import reactor.core.publisher.Mono;
 
-
+import com.example.anime_recommender.model.AnimeNode;
 //Service class used for API Requests to MAL Specifically to populate our database every week
 
 @Service
@@ -37,70 +37,44 @@ public class AnimeApiRequests {
     @Value("${Client_ID}")
 	private String Client_ID;
 
-    //Query the MAL data base for all anime
-    //This will be iterated through multiple times in sizes of 200 due to the api overload of requests
+    //Query the MAL data base for current seasonal anime
+    //This will be iterated through multiple times in sizes of 500 just to catch overhead of the season (most seasons shouldnt be over 100)
     @Async
     public CompletableFuture<AnimeApiResponse> seasonal_query(int year, String season){
 
              return webClient.get()
-                                            .uri(uriBuilder -> uriBuilder.path("/ranking")
-                                                                        .queryParam("ranking_type", "all")
-                                                                        .queryParam("limit", 200)
-                                                                        .queryParam("offset", currentRank)
-                                                                        .build())           //build uri with the respective query parameters
-                                            .header("X-MAL-CLIENT-ID", Client_ID) //set headers
-                                            .retrieve()                                     //retrieeve results
-                                                    //Retrieve API status if there is error
-                                            .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(),
-                                                clientResponse -> clientResponse.bodyToMono(String.class).flatMap(errorBody -> {
-                                                    System.err.println("MAL API Error (" + clientResponse.statusCode() + "): " + errorBody);
-                                                    return Mono.error(new RuntimeException("API error: " + errorBody));
-                                                }))             
-                                                //covert to AnimeApiResponse                                                                
-                                            .bodyToMono(AnimeApiResponse.class)
-                                            .toFuture(); //will be completed asynchronously
+                .uri(uriBuilder -> uriBuilder.path("/season/" + year + "/" + season)
+                                            .queryParam("limit", 500)
+                                            .queryParam("fields", "fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics")
+                                            .build())           //build uri with the respective query parameters
+                .header("X-MAL-CLIENT-ID", Client_ID) //set headers
+                .retrieve()                                     //retrieeve results
+                        //Retrieve API status if there is error
+                .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(),
+                    clientResponse -> clientResponse.bodyToMono(String.class).flatMap(errorBody -> {
+                        System.err.println("MAL API Error (" + clientResponse.statusCode() + "): " + errorBody);
+                        return Mono.error(new RuntimeException("API error: " + errorBody));
+                    }))             
+                    //covert to AnimeApiResponse                                                                
+                .bodyToMono(AnimeApiResponse.class)
+                .toFuture(); //will be completed asynchronously
     };
 
 
-    @Async
-    public CompletableFuture<Anime> FetchAnimeDetails(int id){
-        String fields = "fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics";
-        return webClient
-                .get()
-                .uri(uriBuilder -> uriBuilder.path("/{id}")
-                                                .queryParam("fields",fields)
-                                                .build(id))
-                .header("X-MAL-CLIENT-ID", Client_ID)
-                .retrieve()
-                .bodyToMono(Anime.class)
-                .toFuture();
-
-        
-    }
-
+   
     public CompletableFuture<ArrayList<Anime>> fetchTotalAnimes(int year, String season) {
        
     ArrayList<Anime> animeList = new ArrayList<>();
-       return seasonal_query(year, season).thenCompose(animes -> {
+       return seasonal_query(year, season).thenApply(animes -> {
              // Explicitly define the 'animes' variable type as AnimeApiResponse
             AnimeApiResponse animeResponse = animes;
-            return CompletableFuture.supplyAsync(() -> {
-                for (var data : animeResponse.getData()) {
-                    try {
-                        int id = data.getNode().getId();
-                        Anime animeDetails = FetchAnimeDetails(id).get(); // block until response
-                        animeList.add(animeDetails);
-                        System.out.println(animeDetails.getTitle());
-
-                        //Thread.sleep(500); // 500ms delay
-                    } catch (Exception e) {
-                        System.err.println("Error fetching anime ID " + data.getNode().getId());
-                    }
-                }
-
-                animeRepository.saveAll(animeList);
-                return animeList;
-            });
+            ArrayList<AnimeNode> nodes = animeResponse.getData();
+            
+            for (AnimeNode node : nodes) {
+                animeList.add(node.getNode());
+            }
+            animeRepository.saveAll(animeList);
+            return animeList;
         }); 
 }
 
