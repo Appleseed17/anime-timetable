@@ -70,6 +70,8 @@ public class Anime {
         @ElementCollection
         @CollectionTable(name = "related_anime", joinColumns = @JoinColumn(name = "anime_id"))
         private List<Container> related_anime;
+        @Embedded
+        private StartSeason start_season;
 
         public Broadcast getBroadcast() {
             return broadcast;
@@ -199,11 +201,20 @@ public class Anime {
 
         
 
-        }
+        
 
-        private static class start_season {
+        
+        private static class StartSeason {
             private int year;
             private Season season;
+
+            public int getYear() {
+                return year;
+            }
+
+            public Season getSeason() {
+                return season;
+            }
         }
 
 
@@ -257,6 +268,7 @@ public class Anime {
         }
         
     }
+    
 
     
 
