@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.anime_recommender.model.Anime;
 import com.example.anime_recommender.model.AnimeApiResponse;
-import com.example.anime_recommender.model.AnimeQuery;
 import com.example.anime_recommender.repository.AnimeRepository;
 import com.example.anime_recommender.service.AnimeApiRequests;
 
@@ -36,16 +35,17 @@ public AnimeRecommender(AnimeApiRequests animeService) {
     }
 
 
-@GetMapping("anime/random")
-public /*ArrayList<Anime>*/ResponseEntity<ArrayList<Anime>> getMethodName(/*@RequestParam AnimeQuery param*/) {
+@GetMapping("/anime/random")
+public /*ArrayList<Anime>*/ResponseEntity<Integer> getMethodName(/*@RequestParam AnimeQuery param*/) {
 
     
     
    try {
-        ArrayList<Anime> list = animeService.fetchTotalAnimes(0).get();
+        animeService.fetchSeasonalAnime(2025, "winter");
         // ResponseEntity.ok(list);
-        // animeRepository.saveAll(list);
-        return ResponseEntity.ok(list);
+        // System.out.println(list);
+        
+        return ResponseEntity.ok(200);
     } catch (Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }

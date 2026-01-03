@@ -12,7 +12,7 @@ public class DotenvLoader {
     public void loadEnv() {
         Dotenv dotenv = Dotenv.load();
 
-        System.setProperty("db_name", dotenv.get("db_name"));
+        System.setProperty("db_url", dotenv.get("db_url"));
         System.setProperty("db_UserName", dotenv.get("db_UserName"));
         System.setProperty("db_password", dotenv.get("db_password"));
     }

@@ -40,12 +40,12 @@ public class AnimeApiRequests {
     //Query the MAL data base for current seasonal anime
     //This will be iterated through multiple times in sizes of 500 just to catch overhead of the season (most seasons shouldnt be over 100)
     @Async
-    public CompletableFuture<AnimeApiResponse> seasonal_query(int year, String season){
+    public CompletableFuture<AnimeApiResponse> seasonalQuery(int year, String season){
 
              return webClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/season/" + year + "/" + season)
+                .uri(uriBuilder -> uriBuilder.path("/season/{year}/{season}")
                                             .queryParam("limit", 500)
-                                            .queryParam("fields", "fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics")
+                                            .queryParam("fields", "id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics")
                                             .build())           //build uri with the respective query parameters
                 .header("X-MAL-CLIENT-ID", Client_ID) //set headers
                 .retrieve()                                     //retrieeve results
@@ -62,10 +62,10 @@ public class AnimeApiRequests {
 
 
    
-    public CompletableFuture<ArrayList<Anime>> fetchTotalAnimes(int year, String season) {
+    public CompletableFuture<ArrayList<Anime>> fetchSeasonalAnime(int year, String season) {
        
     ArrayList<Anime> animeList = new ArrayList<>();
-       return seasonal_query(year, season).thenApply(animes -> {
+       return seasonalQuery(year, season).thenApply(animes -> {
              // Explicitly define the 'animes' variable type as AnimeApiResponse
             AnimeApiResponse animeResponse = animes;
             ArrayList<AnimeNode> nodes = animeResponse.getData();
