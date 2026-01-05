@@ -11,7 +11,7 @@ import com.example.anime_recommender.service.AnimeApiRequests;
 
 
 import java.util.ArrayList;
-
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,36 +35,31 @@ public AnimeRecommender(AnimeApiRequests animeService) {
     }
 
 
-@GetMapping("/anime/random")
-public /*ArrayList<Anime>*/ResponseEntity<Integer> getMethodName(/*@RequestParam AnimeQuery param*/) {
+@GetMapping("/anime/seasonal")
+public CompletableFuture<ResponseEntity<ArrayList<Anime>>> getMethodName() {
 
-    
-    
-   try {
-        animeService.fetchSeasonalAnime(2025, "winter");
-        // ResponseEntity.ok(list);
-        // System.out.println(list);
-        
-        return ResponseEntity.ok(200);
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-    }
-// return null;
+    return animeService.fetchSeasonalAnime(2025, "winter")
+        .thenApply(ResponseEntity::ok)
+        .exceptionally(ex -> {
+            ex.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        });
+}
 
 
 }
 
 
-//This will be used as the get request to send information back to the user about a user recommended anime list
-@GetMapping("anime/userRecommendation")
-public String getMethodName(@RequestParam String username) {
+// //This will be used as the get request to send information back to the user about a user recommended anime list
+// @GetMapping("anime/userRecommendation")
+// public String getMethodName(@RequestParam String username) {
 
-    return new String();
-}
-
-
+//     return new String();
+// }
 
 
 
-}
+
+
+// }
 

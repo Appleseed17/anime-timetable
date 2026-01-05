@@ -45,8 +45,8 @@ public class AnimeApiRequests {
              return webClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/season/{year}/{season}")
                                             .queryParam("limit", 500)
-                                            .queryParam("fields", "id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics")
-                                            .build())           //build uri with the respective query parameters
+                                            .queryParam("fields", "id,title,main_picture,alternative_titles,start_date,mean,rank,popularity,num_episodes,start_season")
+                                            .build(year, season))           //build uri with the respective query parameters
                 .header("X-MAL-CLIENT-ID", Client_ID) //set headers
                 .retrieve()                                     //retrieeve results
                         //Retrieve API status if there is error
@@ -72,12 +72,45 @@ public class AnimeApiRequests {
             
             for (AnimeNode node : nodes) {
                 animeList.add(node.getNode());
+
             }
             animeRepository.saveAll(animeList);
+
+            for (Anime anime : animeList) {
+                fetchAnimeById(anime.getId()).thenAccept(anim -> {
+                    System.out.println(anim.getId());
+                    animeRepository.save(anim);
+                }
+                );
+            }
             return animeList;
         }); 
 }
 
+    public CompletableFuture<Anime> fetchAnimeById(int id) {
+
+
+        return webClient.get()
+        .uri(uriBuilder -> uriBuilder.path("/{id}")
+                                            .queryParam("fields", "id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics")
+                                            .build(id))           //build uri with the respective query parameters
+                .header("X-MAL-CLIENT-ID", Client_ID) //set headers
+                .retrieve()                                     //retrieeve results
+                        //Retrieve API status if there is error
+                .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(),
+                    clientResponse -> clientResponse.bodyToMono(String.class).flatMap(errorBody -> {
+                        System.err.println("MAL API Error (" + clientResponse.statusCode() + "): " + errorBody);
+                        return Mono.error(new RuntimeException("API error: " + errorBody));
+                    }))             
+                    //covert to AnimeApiResponse                                                                
+                .bodyToMono(Anime.class)
+                .toFuture()
+                .thenApplyAsync(anime->
+                    animeRepository.save(anime)
+                ); //will be completed asynchronously
+    }
+
 
 }
+
 
