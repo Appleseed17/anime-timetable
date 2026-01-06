@@ -1,52 +1,75 @@
-// package com.example.anime_recommender.service;
+package com.example.anime_recommender.service;
 
-// import java.util.ArrayList;
-// import java.util.concurrent.CompletableFuture;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.http.HttpStatus;
-// import org.springframework.http.ResponseEntity;
-// import org.springframework.scheduling.annotation.Scheduled;
-// import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 
-// import com.example.anime_recommender.model.Anime;
+import com.example.anime_recommender.service.TimeService.*;
+import com.example.anime_recommender.model.Anime;
+import com.example.anime_recommender.model.Season;
+import com.example.anime_recommender.repository.AnimeRepository;
 
-// import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 
-// @Service
-// public class TotalAnimeFetch {
+@Service
 
-//     @Autowired
-//     private AnimeApiRequests animeApiRequests;
-//     private ArrayList<Anime> list;
-//     private int i = 26800;
+public class TotalAnimeFetch {
+
+    private final AnimeRepository animeRepository;
+    private final AnimeApiRequests animeApiRequests; 
+
     
-//     @PostConstruct
-//     public void runOnStartup() {
-//         fetchWeeklyAnimeList();  // Run immediately once
+    public TotalAnimeFetch(AnimeRepository animeRepository, AnimeApiRequests animeApiRequests) {
+        this.animeRepository = animeRepository;
+        this.animeApiRequests = animeApiRequests;
+    }
 
-//     }
-
-
-//     @Scheduled(cron ="0 0 2 ? * SUN") 
-//     public ResponseEntity<String> fetchWeeklyAnimeList(){
-
-//         System.out.println("starting weekly anime fetch...");
-//         try{
-//         do {
-//             list = animeApiRequests.fetchTotalAnimes(i).get();
-//             Thread.sleep(300000);
-//             i+=200;
-//         } while (i<30000);
-//         System.out.println("weekly anime fetch complete");
-//         System.out.println(list.size());
-//         return ResponseEntity.ok().build();
+    private ArrayList<Anime> list;
     
-//     }
-//     catch(Exception e){
-//         System.out.println("weekly anime fetch failed");
-//         System.out.println(e.getMessage());
-//         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//     }
-//     }
-// }
+    
+    @PostConstruct
+    public void runOnStartup() {
+        fetchSeasonalAnime();  // Run immediately once
+
+    }
+
+
+    @Scheduled(cron ="0 0 2 ? * SUN") 
+    public ResponseEntity<String> fetchSeasonalAnime(){
+        TimeService timeService  = new TimeService();
+
+        int curr_year = timeService.currSeasonYear();
+        Season curr_month = timeService.currSeasonMonth();
+
+        String month_field = curr_month.getMalValue();
+
+
+        System.out.println("starting weekly anime fetch...");
+        try{
+        
+        list = animeApiRequests.saveSeasonalAnime(curr_year, month_field).get();
+
+        List<Integer> idList = animeRepository.findBySeason(curr_year, curr_month);
+        for (int id : idList) {
+            animeApiRequests.saveAnimeById(id);
+        }
+
+        System.out.println("weekly anime fetch complete");
+        System.out.println(list.size());
+        return ResponseEntity.ok().build();
+    
+    }
+    catch(Exception e){
+        System.out.println("weekly anime fetch failed");
+        System.out.println(e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+    }
+}

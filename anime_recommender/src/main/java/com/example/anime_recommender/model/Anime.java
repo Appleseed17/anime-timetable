@@ -216,6 +216,10 @@ public class Anime {
                 return season;
             }
         }
+        
+        public StartSeason getStartSeason(){
+            return start_season;
+        }
 
 
         private static class Broadcast {

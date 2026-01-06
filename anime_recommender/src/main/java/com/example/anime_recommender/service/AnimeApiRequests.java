@@ -1,17 +1,22 @@
 package com.example.anime_recommender.service;
 
+import java.time.Duration;
 //import java.net.http.HttpHeaders;
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+
 import com.example.anime_recommender.model.Anime;
 import com.example.anime_recommender.model.AnimeApiResponse;
 import com.example.anime_recommender.repository.AnimeRepository;
 import jakarta.transaction.Transactional;
 import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
 
 import com.example.anime_recommender.model.AnimeNode;
 //Service class used for API Requests to MAL Specifically to populate our database every week
@@ -40,7 +45,7 @@ public class AnimeApiRequests {
     //Query the MAL data base for current seasonal anime
     //This will be iterated through multiple times in sizes of 500 just to catch overhead of the season (most seasons shouldnt be over 100)
     @Async
-    public CompletableFuture<AnimeApiResponse> seasonalQuery(int year, String season){
+    public CompletableFuture<AnimeApiResponse> fetchSeasonalAnime(int year, String season){
 
              return webClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/season/{year}/{season}")
@@ -50,46 +55,45 @@ public class AnimeApiRequests {
                 .header("X-MAL-CLIENT-ID", Client_ID) //set headers
                 .retrieve()                                     //retrieeve results
                         //Retrieve API status if there is error
-                .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(),
-                    clientResponse -> clientResponse.bodyToMono(String.class).flatMap(errorBody -> {
-                        System.err.println("MAL API Error (" + clientResponse.statusCode() + "): " + errorBody);
-                        return Mono.error(new RuntimeException("API error: " + errorBody));
-                    }))             
+                .onStatus(
+                    HttpStatusCode::isError,
+                    clientResponse -> clientResponse.createException()
+    )             
                     //covert to AnimeApiResponse                                                                
                 .bodyToMono(AnimeApiResponse.class)
+                .retryWhen(
+                    Retry.backoff(3, Duration.ofSeconds(2))
+                    .filter(ex -> 
+                        ex instanceof WebClientResponseException wce &&
+                        wce.getStatusCode().is5xxServerError())
+                )
                 .toFuture(); //will be completed asynchronously
     };
 
 
-   
-    public CompletableFuture<ArrayList<Anime>> fetchSeasonalAnime(int year, String season) {
+//Used for casting Anime API Requests from AnimeNode objects to Anime Objects
+    public CompletableFuture<ArrayList<Anime>> saveSeasonalAnime(int year, String season) {
        
     ArrayList<Anime> animeList = new ArrayList<>();
-       return seasonalQuery(year, season).thenApply(animes -> {
+       return fetchSeasonalAnime(year, season).thenApply(animes -> {
              // Explicitly define the 'animes' variable type as AnimeApiResponse
             AnimeApiResponse animeResponse = animes;
             ArrayList<AnimeNode> nodes = animeResponse.getData();
             
             for (AnimeNode node : nodes) {
+                
                 animeList.add(node.getNode());
 
             }
             animeRepository.saveAll(animeList);
-
-            for (Anime anime : animeList) {
-                fetchAnimeById(anime.getId()).thenAccept(anim -> {
-                    System.out.println(anim.getId());
-                    animeRepository.save(anim);
-                }
-                );
-            }
             return animeList;
         }); 
 }
 
+
+//Used to Request for all anime details for each anime by id.
+//Prevents large batch sizes of requests and prevents large batch errors
     public CompletableFuture<Anime> fetchAnimeById(int id) {
-
-
         return webClient.get()
         .uri(uriBuilder -> uriBuilder.path("/{id}")
                                             .queryParam("fields", "id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics")
@@ -97,19 +101,29 @@ public class AnimeApiRequests {
                 .header("X-MAL-CLIENT-ID", Client_ID) //set headers
                 .retrieve()                                     //retrieeve results
                         //Retrieve API status if there is error
-                .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(),
-                    clientResponse -> clientResponse.bodyToMono(String.class).flatMap(errorBody -> {
-                        System.err.println("MAL API Error (" + clientResponse.statusCode() + "): " + errorBody);
-                        return Mono.error(new RuntimeException("API error: " + errorBody));
-                    }))             
+                .onStatus(
+                    HttpStatusCode::isError,
+                    clientResponse -> clientResponse.createException()
+                )             
                     //covert to AnimeApiResponse                                                                
                 .bodyToMono(Anime.class)
-                .toFuture()
-                .thenApplyAsync(anime->
-                    animeRepository.save(anime)
-                ); //will be completed asynchronously
+                .retryWhen(
+                    Retry.backoff(3, Duration.ofSeconds(2))
+                    .filter(ex -> 
+                        ex instanceof WebClientResponseException wce &&
+                        wce.getStatusCode().is5xxServerError())
+                )
+                .toFuture();
+                 //will be completed asynchronously
     }
 
+    // saves the anime webrequest. Used to separate errors between saving and API requests
+
+    public void saveAnimeById(int id) {
+        fetchAnimeById(id).thenApply(anime -> 
+            animeRepository.save(anime)
+        );
+    }
 
 }
 

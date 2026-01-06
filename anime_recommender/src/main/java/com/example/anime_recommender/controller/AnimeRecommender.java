@@ -38,7 +38,7 @@ public AnimeRecommender(AnimeApiRequests animeService) {
 @GetMapping("/anime/seasonal")
 public CompletableFuture<ResponseEntity<ArrayList<Anime>>> getMethodName() {
 
-    return animeService.fetchSeasonalAnime(2025, "winter")
+    return animeService.saveSeasonalAnime(2025, "winter")
         .thenApply(ResponseEntity::ok)
         .exceptionally(ex -> {
             ex.printStackTrace();
