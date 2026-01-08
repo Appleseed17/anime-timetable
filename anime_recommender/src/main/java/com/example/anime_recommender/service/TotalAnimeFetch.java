@@ -36,6 +36,7 @@ public class TotalAnimeFetch {
     
     @PostConstruct
     public void runOnStartup() {
+        // animeRepository.deleteSeason(2025, Season.WINTER);
         fetchSeasonalAnime();  // Run immediately once
 
     }
@@ -55,9 +56,13 @@ public class TotalAnimeFetch {
         try{
         
         list = animeApiRequests.saveSeasonalAnime(curr_year, month_field).get();
-
+        System.out.println(list.get(0).getStartSeason().getSeason());
         List<Integer> idList = animeRepository.findBySeason(curr_year, curr_month);
+        
+        System.out.println(idList);
+
         for (int id : idList) {
+            System.out.println(id);
             animeApiRequests.saveAnimeById(id);
         }
 

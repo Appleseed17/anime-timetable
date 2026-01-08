@@ -1,8 +1,10 @@
 package com.example.anime_recommender.model;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import ch.qos.logback.core.pattern.parser.Node;
 import jakarta.persistence.CascadeType;
@@ -18,6 +20,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
 import com.example.anime_recommender.model.Season;
@@ -71,7 +75,19 @@ public class Anime {
         @CollectionTable(name = "related_anime", joinColumns = @JoinColumn(name = "anime_id"))
         private List<Container> related_anime;
         @Embedded
-        private StartSeason start_season;
+        @JsonProperty("start_season")
+        private StartSeason startSeason;
+        private Instant timeStamp;
+
+        public Instant getTimeStamp() {
+            return timeStamp;
+        }
+        
+        @PrePersist
+        @PreUpdate
+        public void touch() {
+            this.timeStamp = Instant.now();
+        }
 
         public Broadcast getBroadcast() {
             return broadcast;
@@ -203,10 +219,14 @@ public class Anime {
 
         
 
-        
-        private static class StartSeason {
+        @Embeddable 
+        public static class StartSeason {
             private int year;
+            
+            @Enumerated(EnumType.STRING)
             private Season season;
+
+            public StartSeason() {}
 
             public int getYear() {
                 return year;
@@ -218,7 +238,7 @@ public class Anime {
         }
         
         public StartSeason getStartSeason(){
-            return start_season;
+            return startSeason;
         }
 
 
