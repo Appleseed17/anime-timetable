@@ -20,4 +20,12 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer>{
         @Param("season") Season season
     );
 
+    @Query("DELETE from Anime a where a.start_season.season = :season and a.start_season.year = :year")
+    List<Anime> Season ( 
+        @Param("year") int year,
+        @Param("season") Season season
+    );
+
+
+
 }
