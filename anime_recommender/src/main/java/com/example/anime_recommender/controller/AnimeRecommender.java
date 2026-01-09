@@ -44,7 +44,7 @@ public AnimeRecommender(AnimeRepository animeRepository, TimeService timeService
 @GetMapping("/anime/seasonal")
 public List<Anime> getMethodName() {
 
-    return animeRepository.findScheduledAnime();
+    return animeRepository.findScheduledAnime(timeService.currSeasonMonth());
 }
 
 
