@@ -31,6 +31,7 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer>{
         @Param("season") Season season
     );
 
-
+    @Query("SELECT a from Anime a where a.broadcast.day_of_the_week IS NOT NULL AND a.broadcast.start_time IS NOT NULL")
+    List<Anime> findScheduledAnime();
 
 }

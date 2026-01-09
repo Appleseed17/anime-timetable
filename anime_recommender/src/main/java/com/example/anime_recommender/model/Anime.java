@@ -59,8 +59,7 @@ public class Anime {
         private String updated_at;
         private String media_type;
         private String status;
-        @Embedded
-        private MyListStatus my_list_status;
+        
         private String source;
         private String rating;
         @ManyToMany(cascade = CascadeType.ALL)
@@ -149,10 +148,6 @@ public class Anime {
         public String getStatus() {
             return status;
         }
-        public MyListStatus getMy_list_status() {
-            return my_list_status;
-        }
-        
         public String getSource() {
             return source;
         }
@@ -164,7 +159,7 @@ public class Anime {
         }
 
         @Embeddable
-        private static class Picture {
+        public static class Picture {
             private String medium;
             private String large;
             public String getMedium() {
@@ -177,7 +172,7 @@ public class Anime {
         }
     
         @Embeddable
-        private static class AlternativeTitles {
+        public static class AlternativeTitles {
             @ElementCollection
             private List<String> synonyms;
             private String en;
@@ -194,31 +189,7 @@ public class Anime {
             }
             
         }
-    
-    
-        @Embeddable
-        private static class MyListStatus {
-            @Column(name = "list_status")
-            private String status;
-            private Integer score;
-            private Integer num_episodes_watched;
-    
-            public String getStatus() {
-                return status;
-            }
-            public Integer getScore() {
-                return score;
-            }
-            public Integer getNum_episodes_watched() {
-                return num_episodes_watched;
-            }
-            
-        } 
-
         
-
-        
-
         @Embeddable 
         public static class StartSeason {
             private int year;
@@ -242,7 +213,7 @@ public class Anime {
         }
 
 
-        private static class Broadcast {
+        public static class Broadcast {
             private String day_of_the_week;
             private String start_time;
 
@@ -256,7 +227,7 @@ public class Anime {
         }
 
         @Embeddable
-        private static class Container {
+        public static class Container {
             @Embedded
             private Node node;
             public Node getNode() {
@@ -274,7 +245,7 @@ public class Anime {
         }
 
         @Embeddable
-        private static class Node {
+        public static class Node {
             private long id;
             private String title;
             @Embedded
