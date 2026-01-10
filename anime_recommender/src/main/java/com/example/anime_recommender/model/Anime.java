@@ -1,8 +1,13 @@
 package com.example.anime_recommender.model;
+import java.time.DayOfWeek;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -37,8 +42,8 @@ public class Anime {
         private Picture main_picture;
         @Embedded
         private AlternativeTitles alternative_titles;
-        private String start_date;
-        private String end_date;
+        private LocalDate start_date;
+        private LocalDate end_date;
         @Column(length = 5000)
         private String synopsis;
         private Double mean;
@@ -55,8 +60,9 @@ public class Anime {
         )
         private List<Genre> genres;
 
-        private String created_at;
-        private String updated_at;
+        private Instant created_at;
+        
+        private Instant updated_at;
         private String media_type;
         private String status;
         
@@ -82,6 +88,54 @@ public class Anime {
             return timeStamp;
         }
         
+        @JsonProperty("start_date")
+        public void setStartDate(String dateStr) {
+            if (dateStr == null || dateStr.isEmpty()) {
+                this.start_date = null;
+                return;
+            }
+
+            try {
+                if (dateStr.length() == 10) { // "yyyy-MM-dd"
+                    this.start_date = LocalDate.parse(dateStr);
+                } else if (dateStr.length() == 7) { // "yyyy-MM"
+                    this.start_date = LocalDate.parse(dateStr + "-01"); // first day of month
+                } else if (dateStr.length() == 4) { // "yyyy"
+                    this.start_date = LocalDate.parse(dateStr + "-01-01"); // Jan 1st
+                } else {
+                    System.out.println("Unexpected date format: " + dateStr);
+                    this.start_date = null;
+                }
+            } catch (Exception e) {
+                System.out.println("Error parsing date: " + dateStr);
+                this.start_date = null;
+            }
+        }
+
+        @JsonProperty("end_date")
+        public void setEndDate(String dateStr) {
+            if (dateStr == null || dateStr.isEmpty()) {
+                this.end_date = null;
+                return;
+            }
+
+            try {
+                if (dateStr.length() == 10) { // "yyyy-MM-dd"
+                    this.end_date = LocalDate.parse(dateStr);
+                } else if (dateStr.length() == 7) { // "yyyy-MM"
+                    this.end_date = LocalDate.parse(dateStr + "-01"); // first day of month
+                } else if (dateStr.length() == 4) { // "yyyy"
+                    this.end_date = LocalDate.parse(dateStr + "-01-01"); // Jan 1st
+                } else {
+                    System.out.println("Unexpected date format: " + dateStr);
+                    this.end_date = null;
+                }
+            } catch (Exception e) {
+                System.out.println("Error parsing date: " + dateStr);
+                this.start_date = null;
+            }
+        }
+
         @PrePersist
         @PreUpdate
         public void touch() {
@@ -106,10 +160,10 @@ public class Anime {
         public AlternativeTitles getAlternative_titles() {
             return alternative_titles;
         }
-        public String getStart_date() {
+        public LocalDate getStart_date() {
             return start_date;
         }
-        public String getEnd_date() {
+        public LocalDate getEnd_date() {
             return end_date;
         }
         public String getSynopsis() {
@@ -136,7 +190,7 @@ public class Anime {
         public List<Genre> getGenres() {
             return genres;
         }
-        public String getCreated_at() {
+        public Instant getCreated_at() {
             return created_at;
         }
         public String getUpdated_at() {
@@ -214,10 +268,26 @@ public class Anime {
 
 
         public static class Broadcast {
-            private String day_of_the_week;
+            private DayOfWeek day_of_the_week;
+            //@JsonFormat(pattern = "HH:mm")
             private String start_time;
 
-            public String getDay_of_the_week() {
+            @JsonProperty("day_of_the_week")
+            public void setDay(String dayStr) {
+                System.out.println(dayStr);
+                if (dayStr == null || dayStr.isEmpty()) {
+                    this.day_of_the_week = null;
+                    return;
+                }
+
+                try {
+                    this.day_of_the_week = DayOfWeek.valueOf(dayStr.toUpperCase().strip());
+                } catch (IllegalArgumentException e) {
+                    this.day_of_the_week = null; // or log a warning
+                }
+            }
+
+            public DayOfWeek getDay_of_the_week() {
                 return day_of_the_week;
             }
             public String getStart_time() {
