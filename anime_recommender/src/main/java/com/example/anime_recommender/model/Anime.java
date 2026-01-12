@@ -269,8 +269,9 @@ public class Anime {
 
         public static class Broadcast {
             private DayOfWeek day_of_the_week;
-            //@JsonFormat(pattern = "HH:mm")
-            private String start_time;
+            @JsonProperty("start_time")
+            @JsonFormat(pattern = "HH:mm")
+            private LocalTime start_time;
 
             @JsonProperty("day_of_the_week")
             public void setDay(String dayStr) {
