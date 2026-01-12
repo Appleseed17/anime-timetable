@@ -10,7 +10,7 @@ import com.example.anime_recommender.repository.AnimeRepository;
 import com.example.anime_recommender.service.AnimeApiRequests;
 import com.example.anime_recommender.service.TimeService;
 
-
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -44,7 +44,11 @@ public AnimeRecommender(AnimeRepository animeRepository, TimeService timeService
 @GetMapping("/anime/seasonal")
 public List<Anime> getMethodName() {
 
-    return animeRepository.findScheduledAnime(timeService.currSeasonMonth());
+    //will be replaced with cron function every week
+    LocalDate startDate = LocalDate.of(2026, 1, 11);
+    LocalDate endDate = startDate.plusDays(7);
+
+    return animeRepository.findWeeklyAnime(startDate, endDate);
 }
 
 

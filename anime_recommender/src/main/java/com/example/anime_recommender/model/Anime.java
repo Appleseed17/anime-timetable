@@ -193,7 +193,7 @@ public class Anime {
         public Instant getCreated_at() {
             return created_at;
         }
-        public String getUpdated_at() {
+        public Instant getUpdated_at() {
             return updated_at;
         }
         public String getMedia_type() {
@@ -291,7 +291,7 @@ public class Anime {
             public DayOfWeek getDay_of_the_week() {
                 return day_of_the_week;
             }
-            public String getStart_time() {
+            public LocalTime getStart_time() {
                 return start_time;
             }
             
