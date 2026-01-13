@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.anime_recommender.model.Anime;
 import com.example.anime_recommender.model.AnimeApiResponse;
+import com.example.anime_recommender.model.Season;
 import com.example.anime_recommender.repository.AnimeRepository;
 import com.example.anime_recommender.service.AnimeApiRequests;
 import com.example.anime_recommender.service.TimeService;
@@ -26,6 +27,7 @@ public class AnimeRecommender {
 
     private final AnimeRepository animeRepository;
     private final TimeService timeService;
+    private final AnimeApiRequests animeApiRequests;
     // This is the mapping in order to get a JSON request with the query parameters
     // it will use the list within the database of all anime, and create a smaller list with these parameters
     // from this list it will randomly select one
@@ -35,9 +37,10 @@ public class AnimeRecommender {
 
     
 
-public AnimeRecommender(AnimeRepository animeRepository, TimeService timeService) {
+public AnimeRecommender(AnimeRepository animeRepository, TimeService timeService, AnimeApiRequests animeApiRequests) {
     this.animeRepository = animeRepository;
     this.timeService = timeService;
+    this.animeApiRequests = animeApiRequests;
     }
 
 
@@ -50,6 +53,22 @@ public List<Anime> getMethodName() {
 
     return animeRepository.findWeeklyAnime(startDate, endDate);
 }
+
+
+
+
+@GetMapping("/anime/delete")
+public int deleteMethod() {
+
+    return animeRepository.deleteSeason( 2026, Season.WINTER);
+}
+
+@GetMapping("/anime/test")
+public CompletableFuture<Anime> testMethod() {
+
+    return animeApiRequests.fetchAnimeById(56009);
+}
+
 
 
 }

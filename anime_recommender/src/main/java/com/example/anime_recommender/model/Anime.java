@@ -7,6 +7,9 @@ import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -58,6 +61,7 @@ public class Anime {
         joinColumns = @JoinColumn(name = "anime_id"),
         inverseJoinColumns = @JoinColumn(name = "genre_id")
         )
+        @OnDelete(action = OnDeleteAction.CASCADE)
         private List<Genre> genres;
 
         private Instant created_at;
@@ -73,6 +77,7 @@ public class Anime {
         name = "anime_studios",
         joinColumns = @JoinColumn(name = "anime_id"),
         inverseJoinColumns = @JoinColumn(name = "studio_id"))
+        @OnDelete(action = OnDeleteAction.CASCADE)
         private List<Studio> studios;
         @Embedded
         private Broadcast broadcast;
@@ -83,6 +88,19 @@ public class Anime {
         @JsonProperty("start_season")
         private StartSeason startSeason;
         private Instant timeStamp;
+        @JsonProperty("num_episodes")
+        private int num_episodes;
+        @JsonProperty("average_episode_duration")
+        private int average_episode_duration;
+
+
+        public int getEpisodeNum() {
+            return num_episodes;
+        }
+        
+        public int getEpisodeDuration() {
+            return average_episode_duration;
+        }
 
         public Instant getTimeStamp() {
             return timeStamp;
@@ -228,6 +246,7 @@ public class Anime {
         @Embeddable
         public static class AlternativeTitles {
             @ElementCollection
+            @OnDelete(action = OnDeleteAction.CASCADE)
             private List<String> synonyms;
             private String en;
             private String ja;
