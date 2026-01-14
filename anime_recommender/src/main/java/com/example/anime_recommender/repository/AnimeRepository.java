@@ -3,7 +3,10 @@ package com.example.anime_recommender.repository;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
+import org.antlr.v4.runtime.atn.SemanticContext.AND;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -19,25 +22,47 @@ import jakarta.transaction.Transactional;
 @Repository
 public interface AnimeRepository extends JpaRepository<Anime, Integer>{
     
-    @Query("select a.id from Anime a where a.startSeason.season = :season and a.startSeason.year = :year")
-    List<Integer> findBySeason(
-        @Param("year") int year,
-        @Param("season") Season season
-    );
 
     @Modifying
     @Transactional
-    @Query("DELETE from Anime a where a.startSeason.season = :season and a.startSeason.year = :year")
-    int deleteSeason ( 
-        @Param("year") int year,
-        @Param("season") Season season
+    @Query("""
+        DELETE FROM Anime a
+        WHERE a.timeStamp < :oldTimeStamp
+    """)
+    int deleteOldEntries ( 
+        @Param("OldStamp") Instant oldTimeStamp
     );
 
-    @Query("SELECT a from Anime a where a.start_date <= :endOfWeek AND (end_date IS NULL OR end_date >= :startOfWeek) AND a.broadcast.day_of_the_week IS NOT NULL AND a.broadcast.start_time IS NOT NULL AND a.status = 'currently_airing' OR a.status = 'not_yet_aired'")
+    @Query("""
+        SELECT a from Anime a 
+        WHERE a.start_date <= :endOfWeek 
+        AND (
+            end_date IS NULL 
+            OR end_date >= :startOfWeek
+            ) 
+        AND a.broadcast.day_of_the_week IS NOT NULL 
+        AND a.broadcast.start_time IS NOT NULL 
+        AND (
+        a.status = 'currently_airing' 
+        OR a.status = 'not_yet_aired'
+            )
+    """)
     List<Anime> findWeeklyAnime(
         @Param("startOfWeek") LocalDate startOfWeek,
         @Param("endOfWeek") LocalDate endOfWeek
     );
+    @Query("""
+    SELECT a FROM Anime a
+    WHERE a.num_list_users IS NOT NULL
+    AND a.broadcast.day_of_the_week IS NOT NULL
+    AND a.broadcast.start_time IS NOT NULL
+    AND (
+        a.status = 'currently_airing'
+        OR a.status = 'not_yet_aired'
+        )
+    ORDER BY a.num_list_users DESC
+    """)
+    List<Anime> findMostPopular(Pageable pageable);
 
 
 //     start_date <= :endOfWeek

@@ -3,6 +3,7 @@ package com.example.anime_recommender.controller;
 
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.service.annotation.PatchExchange;
 
 import com.example.anime_recommender.model.Anime;
 import com.example.anime_recommender.model.AnimeApiResponse;
@@ -14,11 +15,18 @@ import com.example.anime_recommender.service.TimeService;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 
 
@@ -44,8 +52,16 @@ public AnimeRecommender(AnimeRepository animeRepository, TimeService timeService
     }
 
 
-@GetMapping("/anime/seasonal")
-public List<Anime> getMethodName() {
+@GetMapping("/anime/seasonal/popular")
+public List<Anime> getMostPopular() {
+    Pageable pageable = PageRequest.of(0, 3);
+    return animeRepository.findMostPopular(pageable);
+
+}
+
+
+@GetMapping("/anime/seasonal/weekly")
+public List<Anime> getWeeklySchedule() {
 
     //will be replaced with cron function every week
     LocalDate startDate = LocalDate.of(2026, 1, 11);
@@ -55,35 +71,14 @@ public List<Anime> getMethodName() {
 }
 
 
+@GetMapping("/anime/{id}")
+public Optional<Anime> getAnime(@PathVariable int id){
+    return animeRepository.findById(id);
 
-
-@GetMapping("/anime/delete")
-public int deleteMethod() {
-
-    return animeRepository.deleteSeason( 2026, Season.WINTER);
 }
-
-@GetMapping("/anime/test")
-public CompletableFuture<Anime> testMethod() {
-
-    return animeApiRequests.fetchAnimeById(56009);
-}
-
 
 
 }
 
 
-// //This will be used as the get request to send information back to the user about a user recommended anime list
-// @GetMapping("anime/userRecommendation")
-// public String getMethodName(@RequestParam String username) {
-
-//     return new String();
-// }
-
-
-
-
-
-// }
 
