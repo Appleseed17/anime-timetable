@@ -1,5 +1,6 @@
 package com.example.anime_recommender.service;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -56,8 +57,10 @@ public class TotalAnimeFetch {
         try{
         
         list = animeApiRequests.saveSeasonalAnime(curr_year, month_field).get();
-        System.out.println(list.get(0).getStartSeason().getSeason());
-        List<Integer> idList = animeRepository.findBySeason(curr_year, curr_month);
+
+        Instant beginning = Instant.now().minusSeconds(600);
+        Instant end = Instant.now().plusSeconds(600);
+        List<Integer> idList = animeRepository.findRecentQuery(beginning, end);
         
         System.out.println(idList);
 

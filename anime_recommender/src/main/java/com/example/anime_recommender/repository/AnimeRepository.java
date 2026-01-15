@@ -64,6 +64,16 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer>{
     """)
     List<Anime> findMostPopular(Pageable pageable);
 
+    @Query("""
+        SELECT a.id
+        FROM Anime a
+        WHERE a.timeStamp > :beginning
+        AND a.timeStamp <= :end    
+        """)
+    List<Integer> findRecentQuery(
+        @Param("beginning") Instant beginning,
+        @Param("end") Instant end
+    );
 
 //     start_date <= :endOfWeek
 // AND (end_date IS NULL OR end_date >= :startOfWeek)

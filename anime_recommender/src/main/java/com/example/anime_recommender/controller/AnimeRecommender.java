@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 
 @RestController
+@RequestMapping("/api/anime")
 public class AnimeRecommender {
 
     private final AnimeRepository animeRepository;
@@ -52,7 +53,7 @@ public AnimeRecommender(AnimeRepository animeRepository, TimeService timeService
     }
 
 
-@GetMapping("/anime/seasonal/popular")
+@GetMapping("/seasonal/popular")
 public List<Anime> getMostPopular() {
     Pageable pageable = PageRequest.of(0, 3);
     return animeRepository.findMostPopular(pageable);
@@ -60,7 +61,7 @@ public List<Anime> getMostPopular() {
 }
 
 
-@GetMapping("/anime/seasonal/weekly")
+@GetMapping("/seasonal/weekly")
 public List<Anime> getWeeklySchedule() {
 
     //will be replaced with cron function every week
@@ -71,7 +72,7 @@ public List<Anime> getWeeklySchedule() {
 }
 
 
-@GetMapping("/anime/{id}")
+@GetMapping("/{id}")
 public Optional<Anime> getAnime(@PathVariable int id){
     return animeRepository.findById(id);
 
