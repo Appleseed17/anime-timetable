@@ -60,7 +60,7 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer>{
         a.status = 'currently_airing'
         OR a.status = 'not_yet_aired'
         )
-    ORDER BY a.num_list_users DESC
+    ORDER BY a.broadcast.day_of_the_week ASC, a.broadcast.start_time ASC
     """)
     List<Anime> findMostPopular(Pageable pageable);
 
