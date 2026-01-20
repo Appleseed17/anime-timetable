@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
 import { getSeasonalAnime } from "../api/animeApi";
+
 import "../static/grid.css"
-function App() {
+
+
+export function Schedule() {
   const [anime, setAnime] = useState([]);
 
   useEffect(() => {
@@ -32,6 +37,8 @@ function App() {
           <div key={a.id} className="anime-card">
             <div>{a.title}</div>
             <p>{a.broadcast.start_time}</p>
+            <Link to={`/anime/{a.id}`}> Info</Link>
+
             <img src={a.main_picture.medium} alt={a.title} width={120} />
           </div>
         ))}
@@ -40,7 +47,3 @@ function App() {
 </div>
   );
 }
-
-export default App;
-
-
