@@ -37,9 +37,9 @@ export function Schedule() {
           <div key={a.id} className="anime-card">
             <div>{a.title}</div>
             <p>{a.broadcast.start_time}</p>
-            <Link to={`/anime/{a.id}`}> Info</Link>
+            <Link to={`/anime/${a.id}`}> <img src={a.main_picture.medium} alt={a.title} width={120} /></Link>
 
-            <img src={a.main_picture.medium} alt={a.title} width={120} />
+            
           </div>
         ))}
     </div>
