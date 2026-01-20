@@ -31,8 +31,10 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 import com.example.anime_recommender.model.Season;
+import com.example.anime_recommender.model.NextAiring;
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -92,7 +94,23 @@ public class Anime {
         private int num_episodes;
         @JsonProperty("average_episode_duration")
         private int average_episode_duration;
+        @Transient
+        private NextAiring next_airing;
 
+        public void computeNextAiring() {
+            if (broadcast != null) {
+                this.next_airing = new NextAiring(
+                    getStart_date(),
+                    getEnd_date(),
+                    broadcast.getDay_of_the_week(),
+                    broadcast.getStart_time()
+                );
+            }
+        }
+         public NextAiring getNext_airing() {
+            if (next_airing == null) computeNextAiring();
+            return next_airing;
+        }
 
         public int getEpisodeNum() {
             return num_episodes;
