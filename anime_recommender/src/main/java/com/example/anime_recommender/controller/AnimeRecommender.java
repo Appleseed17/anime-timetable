@@ -12,7 +12,9 @@ import com.example.anime_recommender.repository.AnimeRepository;
 import com.example.anime_recommender.service.AnimeApiRequests;
 import com.example.anime_recommender.service.TimeService;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -56,7 +58,7 @@ public AnimeRecommender(AnimeRepository animeRepository, TimeService timeService
 @GetMapping("/seasonal/popular")
 public List<Anime> getMostPopular() {
     Pageable pageable = PageRequest.of(0, 3);
-    return animeRepository.findMostPopular(pageable);
+    return animeRepository.findMostPopular(pageable, Instant.now().minus(14, ChronoUnit.DAYS));
 
 }
 
