@@ -58,7 +58,7 @@ public AnimeRecommender(AnimeRepository animeRepository, TimeService timeService
 @GetMapping("/seasonal/popular")
 public List<Anime> getMostPopular() {
     Pageable pageable = PageRequest.of(0, 3);
-    return animeRepository.findMostPopular(pageable, Instant.now().minus(14, ChronoUnit.DAYS));
+    return animeRepository.findMostPopular(pageable);
 
 }
 

@@ -46,11 +46,12 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer>{
         a.status = 'currently_airing' 
         OR a.status = 'not_yet_aired'
             )
+        
         ORDER BY a.broadcast.day_of_the_week ASC, a.broadcast.start_time ASC
     """)
     List<Anime> findWeeklyAnime(
         @Param("startOfWeek") LocalDate startOfWeek,
-        @Param("endOfWeek") LocalDate endOfWeek
+        @Param("endOfWeek") LocalDate endOfWeek,
     );
 
     @Query("""
@@ -62,12 +63,10 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer>{
         a.status = 'currently_airing'
         OR a.status = 'not_yet_aired'
         )
-    AND a.updated_at >= :prev_weeks
     ORDER BY a.rank ASC, a.popularity ASC, a.num_list_users ASC
     """)
     List<Anime> findMostPopular(
-        Pageable pageable,
-        @Param("prev_weeks") Instant prev_weeks
+        Pageable pageable
     );
 
     @Query("""
