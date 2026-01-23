@@ -55,15 +55,15 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer>{
     );
 
     @Query("""
-    SELECT a FROM Anime a
-    WHERE a.num_list_users IS NOT NULL
-    AND a.broadcast.day_of_the_week IS NOT NULL
-    AND a.broadcast.start_time IS NOT NULL
-    AND (
-        a.status = 'currently_airing'
-        OR a.status = 'not_yet_aired'
-        )
-    ORDER BY a.rank ASC, a.popularity ASC, a.num_list_users ASC
+        SELECT a FROM Anime a
+        WHERE a.num_list_users IS NOT NULL
+        AND a.broadcast.day_of_the_week IS NOT NULL
+        AND a.broadcast.start_time IS NOT NULL
+        AND (
+            a.status = 'currently_airing'
+            OR a.status = 'not_yet_aired'
+            )
+        ORDER BY a.rank ASC, a.popularity ASC, a.num_list_users ASC
     """)
     List<Anime> findMostPopular(
         Pageable pageable
@@ -80,6 +80,18 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer>{
         @Param("end") Instant end
     );
 
+    @Query("""
+        SELECT DISTINCT a
+        FROM Anime a
+        JOIN a.genres g
+        WHERE g.name = :genreName
+        AND a.broadcast.day_of_the_week IS NOT NULL
+        AND a.broadcast.start_time IS NOT NULL
+        AND (
+            a.status = 'currently_airing'
+            OR a.status = 'not_yet_aired'
+            )
+    """)
     List<Anime> findByGenres_Name(String genreName);
 
 

@@ -11,5 +11,10 @@ export async function getSeasonalAnime() {
 export async function getAnimeByID(id) {
   const response = await axios.get(`${url}/api/anime/${id}`);
   return response;
-
 }
+
+export async function getAnimeByGenre(genre) {
+  const response = await axios.get(`${url}/api/anime/seasonal/genre/${genre}`);
+  return response;
+}
+
