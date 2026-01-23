@@ -25,6 +25,9 @@ export function Schedule() {
     SATURDAY: 7,
     
 };
+if (anime) {
+console.log(anime)
+}
 
   return (
     <div className="schedule-grid">

@@ -80,8 +80,7 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer>{
         @Param("end") Instant end
     );
 
-//     start_date <= :endOfWeek
-// AND (end_date IS NULL OR end_date >= :startOfWeek)
-// AND broadcast.dayOfWeek IS NOT NULL
-// AND broadcast.startTime IS NOT NULL
+    List<Anime> findByGenres_Name(String genreName);
+
+
 }

@@ -80,6 +80,11 @@ public Optional<Anime> getAnime(@PathVariable int id){
 
 }
 
+@GetMapping("seasonal/genre/{genre_name}")
+public List<Anime> getAnimeByGenre(@PathVariable String genre_name){
+    return animeRepository.findByGenres_Name(genre_name);
+}
+
 
 }
 
