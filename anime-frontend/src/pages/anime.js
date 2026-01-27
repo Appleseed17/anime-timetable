@@ -35,6 +35,12 @@ export function AnimeInfo() {
         <h1>{anime.title}</h1> 
             <img src = {anime.main_picture.medium} alt={id}/>
             <Link to="/schedule">Home</Link>
+            {anime.genres.map(g => (
+                <p>
+                <Link to={`/anime/genre/${g.name}`} key={g.id}>{g.name}</Link>
+                </p>
+            )
+            )}
             </div>
 
     )

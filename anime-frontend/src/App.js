@@ -12,6 +12,8 @@ function App() {
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/anime/:id" element={<AnimeInfo />} />
             <Route path="/anime/genre/:genre" element={<AnimeGenres />} />
+
+            {/* Ongoing anime rankings, possibly add sort by genre etc */}
         </Routes>
 
 

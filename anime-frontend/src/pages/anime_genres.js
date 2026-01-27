@@ -22,6 +22,9 @@ export function AnimeGenres(){
         <>
         <h1>{genre}</h1>
         <div>
+            <div>
+                <Link to="/schedule">Home</Link>
+            </div>
             {anime
             .map(a => (
             <div key={a.id} className="anime-card">
