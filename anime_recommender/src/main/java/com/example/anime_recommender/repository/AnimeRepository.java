@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.anime_recommender.model.Anime;
 import com.example.anime_recommender.model.Season;
+import com.example.anime_recommender.repository.projection.GenreCount;
 
 import jakarta.transaction.Transactional;
 
@@ -91,8 +92,25 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer>{
             a.status = 'currently_airing'
             OR a.status = 'not_yet_aired'
             )
+        ORDER BY 
+            rank NULLS LAST,
+            rank ASC, 
+            num_list_users DESC
     """)
-    List<Anime> findByGenres_Name(String genreName);
+    List<Anime> findByGenresName(String genreName, Pageable pageable);
 
+    @Query("""
+        SELECT DISTINCT COUNT(a) as count, g.name as name
+        FROM Anime a
+        JOIN a.genres g
+        WHERE a.broadcast.day_of_the_week IS NOT NULL
+        AND a.broadcast.start_time IS NOT NULL
+        AND (
+            a.status = 'currently_airing'
+            OR a.status = 'not_yet_aired'
+            )
+        GROUP BY g.name
+            """)
+    List<GenreCount> findSeasonalGenreCounts();
 
 }

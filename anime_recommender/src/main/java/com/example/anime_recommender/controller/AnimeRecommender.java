@@ -9,6 +9,7 @@ import com.example.anime_recommender.model.Anime;
 import com.example.anime_recommender.model.AnimeApiResponse;
 import com.example.anime_recommender.model.Season;
 import com.example.anime_recommender.repository.AnimeRepository;
+import com.example.anime_recommender.repository.projection.GenreCount;
 import com.example.anime_recommender.service.AnimeApiRequests;
 import com.example.anime_recommender.service.TimeService;
 
@@ -82,9 +83,14 @@ public Optional<Anime> getAnime(@PathVariable int id){
 
 @GetMapping("seasonal/genre/{genre_name}")
 public List<Anime> getAnimeByGenre(@PathVariable String genre_name){
-    return animeRepository.findByGenres_Name(genre_name);
+    Pageable pageable = PageRequest.of(0, 5);
+    return animeRepository.findByGenresName(genre_name, pageable);
 }
 
+@GetMapping("seasonal/genre")
+public List<GenreCount> getGenres(){
+    return animeRepository.findSeasonalGenreCounts();
+}
 
 }
 
