@@ -3,14 +3,14 @@ import { useParams, Link } from "react-router-dom"
 
 import { getAnimeByGenre } from "../api/animeApi";
 
-export function AnimeGenres(){
+export function AnimeGenre(){
     const [anime, setAnime] = useState(null);
 
     var { genre } = useParams();
 
     useEffect(() => {
         getAnimeByGenre(genre)
-            .then(res => setAnime(res.data))
+            .then(res => setAnime(res.data.content))
             .catch(console.error)
     }, [genre])
     console.log(genre)
@@ -21,6 +21,7 @@ export function AnimeGenres(){
     return (
         <>
         <h1>{genre}</h1>
+        <Link to="/anime/genres">Back</Link>
         <div>
             <div>
                 <Link to="/schedule">Home</Link>

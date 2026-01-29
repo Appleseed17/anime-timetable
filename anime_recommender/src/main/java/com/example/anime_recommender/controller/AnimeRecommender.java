@@ -15,6 +15,7 @@ import java.util.Optional;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -41,8 +42,8 @@ public AnimeRecommender(AnimeRepository animeRepository, TimeService timeService
 
 
 @GetMapping("/seasonal/popular")
-public List<Anime> getMostPopular(
-    @RequestParam(required = false) Pageable pageable
+public Page<Anime> getMostPopular(
+    Pageable pageable
 ) {
     return animeRepository.findMostPopular(pageable);
 
@@ -56,24 +57,26 @@ public List<Anime> getWeeklySchedule() {
     return animeRepository.findWeeklyAnime(startDate, endDate);
 }
 
+@GetMapping("seasonal/genre")
+public List<GenreCount> getGenres(){
+    return animeRepository.findSeasonalGenreCounts();
+}
+
+@GetMapping("seasonal/genre/{genre_name}")
+public Page<Anime> getAnimeByGenre(
+    @PathVariable String genre_name,
+    Pageable pageable
+)   {
+    return animeRepository.findByGenresName(genre_name, pageable);
+}
+
 @GetMapping("/{id}")
 public Optional<Anime> getAnime(@PathVariable int id){
     return animeRepository.findById(id);
 
 }
 
-@GetMapping("seasonal/genre/{genre_name}")
-public List<Anime> getAnimeByGenre(
-    @PathVariable String genre_name,
-    @RequestParam(required = false) Pageable pageable
-)   {
-    return animeRepository.findByGenresName(genre_name, pageable);
-}
 
-@GetMapping("seasonal/genre")
-public List<GenreCount> getGenres(){
-    return animeRepository.findSeasonalGenreCounts();
-}
 
 }
 

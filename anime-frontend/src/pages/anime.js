@@ -37,7 +37,7 @@ export function AnimeInfo() {
             <Link to="/schedule">Home</Link>
             {anime.genres.map(g => (
                 <p>
-                <Link to={`/anime/genre/${g.name}`} key={g.id}>{g.name}</Link>
+                <Link to={`/anime/genres/${g.name}`} key={g.id}>{g.name}</Link>
                 </p>
             )
             )}

@@ -13,8 +13,23 @@ export async function getAnimeByID(id) {
   return response;
 }
 
-export async function getAnimeByGenre(genre) {
-  const response = await axios.get(`${url}/api/anime/seasonal/genre/${genre}`);
+export async function getGenres() {
+  const response = await axios.get(`${url}/api/anime/seasonal/genre`);
   return response;
+}
+export async function getAnimeByGenre(genre) {
+  const response = await axios.get(`${url}/api/anime/seasonal/genre/${genre}`, {params: {
+    size: 5
+  }});
+  return response;
+}
+
+export async function getPopularAnime() {
+  const response = await axios.get(`${url}/api/anime/seasonal/popular`,
+     {params: {
+      page: 0,
+      size: 3
+     }});
+     return response
 }
 

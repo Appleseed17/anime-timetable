@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.antlr.v4.runtime.atn.SemanticContext.AND;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -66,7 +67,7 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer>{
             )
         ORDER BY a.rank ASC, a.popularity ASC, a.num_list_users ASC
     """)
-    List<Anime> findMostPopular(
+    Page<Anime> findMostPopular(
         Pageable pageable
     );
 
@@ -97,7 +98,7 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer>{
             rank ASC, 
             num_list_users DESC
     """)
-    List<Anime> findByGenresName(String genreName, Pageable pageable);
+    Page<Anime> findByGenresName(String genreName, Pageable pageable);
 
     @Query("""
         SELECT DISTINCT COUNT(a) as count, g.name as name
