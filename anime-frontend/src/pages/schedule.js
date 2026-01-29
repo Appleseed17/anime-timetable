@@ -31,7 +31,12 @@ console.log(anime)
 
   return (
     <div> 
-
+    
+    
+    {/* WRITE QUERY FOR ONGOING GENRES, AND RANKINGS, Perhaps write something to add a poll*/}
+    {/* <p>
+      <Link></Link>
+    </p> */}
 
     
 
