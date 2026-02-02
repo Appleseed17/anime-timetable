@@ -7,9 +7,9 @@ import { AnimeGenres } from "./pages/genres.js";
 import { PopularAnime } from "./pages/popular.js";
 
 
+
 function App() {
     return (
-
         <Routes>
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/anime/genres" element={<AnimeGenres />} />
@@ -19,11 +19,7 @@ function App() {
             
             {/* Ongoing anime rankings, possibly add sort by genre etc */}
         </Routes>
-
-
-
     )
-
 }
 
 
