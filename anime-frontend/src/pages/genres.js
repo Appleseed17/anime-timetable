@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom"
 
 import { getGenres } from "../api/animeApi";
-
+import { Options } from "../components/OptionsBar";
 
 export function AnimeGenres() {
      const [genre, setGenres] = useState(null);
@@ -18,15 +18,17 @@ export function AnimeGenres() {
         }
 
     return (
-        <div>
-        {genre.map(
-            g => (
-                <div>
-                    <Link to={`/anime/genres/${g.name}`}>{g.name} ({g.count})</Link>
-                </div>
-            )
-        )}
-        </div>
+        Options(
+            <div>
+            {genre.map(
+                g => (
+                    <div>
+                        <Link to={`/anime/genres/${g.name}`}>{g.name} ({g.count})</Link>
+                    </div>
+                )
+            )}
+            </div>
+        )
     )
 
 

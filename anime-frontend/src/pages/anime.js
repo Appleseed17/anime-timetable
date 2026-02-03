@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom"
 
 import { getAnimeByID } from "../api/animeApi";
-
+import { Options } from "../components/OptionsBar";
 
 export function AnimeInfo() {
     const [anime, setAnime] = useState(null);
@@ -31,18 +31,18 @@ export function AnimeInfo() {
 
 
     return ( 
-        <div>
-        <h1>{anime.title}</h1> 
-            <img src = {anime.main_picture.medium} alt={id}/>
-            <Link to="/schedule">Home</Link>
-            {anime.genres.map(g => (
-                <p>
-                <Link to={`/anime/genres/${g.name}`} key={g.id}>{g.name}</Link>
-                </p>
-            )
-            )}
+        Options(
+            <div>
+                <h1>{anime.title}</h1> 
+                    <img src = {anime.main_picture.medium} alt={id}/>
+                    {anime.genres.map(g => (
+                        <p>
+                        <Link to={`/anime/genres/${g.name}`} key={g.id}>{g.name}</Link>
+                        </p>
+                    )
+                    )}
             </div>
-
+        )
     )
 
 }

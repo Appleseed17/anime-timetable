@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom"
 
 import { getPopularAnime } from "../api/animeApi";
+import { Options } from "../components/OptionsBar";
 
 export function PopularAnime() {
 
@@ -18,20 +19,22 @@ export function PopularAnime() {
     }
 
     return (
-        <div>
-            
-            <Link to="/schedule">Home</Link>
-            {anime.map(
-                (a, index) => (
-                    <div key={a.id}>
-                        <p>rank {index + 1}</p>
-                    <div>{a.title}</div>
-                    <img src={a.main_picture.medium} alt={a.title} width={120} />
-                    </div>
-                )
-            )}
+        Options(
+            <div>
+                
+                <Link to="/schedule">Home</Link>
+                {anime.map(
+                    (a, index) => (
+                        <div key={a.id}>
+                            <p>rank {index + 1}</p>
+                        <div>{a.title}</div>
+                        <img src={a.main_picture.medium} alt={a.title} width={120} />
+                        </div>
+                    )
+                )}
 
-        </div>
+            </div>
+        )
     )
 
 

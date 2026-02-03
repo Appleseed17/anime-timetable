@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { getSeasonalAnime } from "../api/animeApi";
-
+import { Options } from "../components/OptionsBar";
 import "../static/grid.css"
 
 
@@ -30,34 +30,28 @@ console.log(anime)
 }
 
   return (
-    <div> 
-    
-    
-    {/* WRITE QUERY FOR ONGOING GENRES, AND RANKINGS, Perhaps write something to add a poll*/}
-    {/* <p>
-      <Link></Link>
-    </p> */}
+    Options(
+      <div> 
+        <div className="schedule-grid">
+      {Object.entries(DAY_TO_COLUMN).map(([day, col]) => (
+        <div key={day} className="day-column">
+          <h3>{day}</h3>
+          {anime
+            .filter(a => a.broadcast.day_of_the_week === day)
+            .map(a => (
+              <div key={a.id} className="anime-card">
+                <div>{a.title}</div>
+                <p>{a.broadcast.start_time}</p>
+                <Link to={`/anime/${a.id}`}> <img src={a.main_picture.medium} alt={a.title} width={120} /></Link>
 
-    
-
-      <div className="schedule-grid">
-    {Object.entries(DAY_TO_COLUMN).map(([day, col]) => (
-      <div key={day} className="day-column">
-        <h3>{day}</h3>
-        {anime
-          .filter(a => a.broadcast.day_of_the_week === day)
-          .map(a => (
-            <div key={a.id} className="anime-card">
-              <div>{a.title}</div>
-              <p>{a.broadcast.start_time}</p>
-              <Link to={`/anime/${a.id}`}> <img src={a.main_picture.medium} alt={a.title} width={120} /></Link>
-
-              
+                
+                  </div>
+                ))}
             </div>
           ))}
+        </div>
       </div>
-    ))}
-  </div>
-</div>
+      )
   );
+
 }
