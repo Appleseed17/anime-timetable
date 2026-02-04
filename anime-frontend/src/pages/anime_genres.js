@@ -4,10 +4,10 @@ import { useParams, Link } from "react-router-dom"
 import { getAnimeByGenre } from "../api/animeApi";
 import { Options } from "../components/OptionsBar";
 
-export function AnimeGenre(){
+export function AnimeGenre(genre){
     const [anime, setAnime] = useState(null);
 
-    var { genre } = useParams();
+    // var { genre } = useParams();
 
     useEffect(() => {
         getAnimeByGenre(genre)
@@ -20,21 +20,20 @@ export function AnimeGenre(){
     }
 
     return (
-        Options(
-            <>
-            <h1>{genre}</h1>
-            <div>
-                {anime
-                .map(a => (
-                <div key={a.id} className="anime-card">
-                    <div>{a.title}</div>
-                    <p>{a.broadcast.start_time}</p>
-                    <Link to={`/anime/${a.id}`}> <img src={a.main_picture.medium} alt={a.title} width={120} /></Link>  
+        
+            <div className="background bg-blue-100 rounded-lg">
+                <h1 className="text-blue-900 text-3xl text-center ">{genre}</h1>
+                <div className="grid grid-cols-2 gap-4 p-4 ">
+                    {anime
+                    .map(a => (
+                    <div key={a.id} className="background bg-blue-200 rounded-lg">
+                        <div className="flex justify-center">{a.title}</div>
+                        <Link to={`/anime/${a.id}`} className="flex justify-center"> <img src={a.main_picture.medium} alt={a.title} width={120} /></Link>  
+                    </div>
+                    ))}
                 </div>
-                ))}
-                </div>
-            </>
-        )
+            </div>
+
         )
         
 

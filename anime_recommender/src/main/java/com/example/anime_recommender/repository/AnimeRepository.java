@@ -111,6 +111,7 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer>{
             OR a.status = 'not_yet_aired'
             )
         GROUP BY g.name
+        ORDER BY count DESC
             """)
     List<GenreCount> findSeasonalGenreCounts();
 
