@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom"
 
 const options = [
-  { label: "Discover", to: "/anime/discover" },
+  { label: "Discover", to: "/anime/discover/Popular" },
   { label: "Schedule", to: "/schedule" },
   { label: "Popular", to: "/anime/popular" },
 ]

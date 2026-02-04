@@ -12,8 +12,8 @@ function App() {
     return (
         <Routes>
             <Route path="/schedule" element={<Schedule />} />
-            <Route path="/anime/discover" element={<AnimeDiscover />} />
-            <Route path="/anime/genres/:genre" element={<AnimeGenre />} />
+            <Route path="/anime/discover/Popular" element={<AnimeDiscover />} />
+            <Route path="/anime/discover/:genre" element={<AnimeDiscover />} />
             <Route path="/anime/popular" element={<PopularAnime />} />  
             <Route path="/anime/:id" element={<AnimeInfo />} />
             

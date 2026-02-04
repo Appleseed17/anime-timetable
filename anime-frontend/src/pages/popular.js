@@ -9,7 +9,7 @@ export function PopularAnime() {
     const [anime, setAnime] = useState(null);
 
     useEffect(() => {
-        getPopularAnime()
+        getPopularAnime(2)
             .then(res => setAnime(res.data.content))
             .catch(console.error)
     }, [])
@@ -22,7 +22,6 @@ export function PopularAnime() {
         Options(
             <div>
                 
-                <Link to="/schedule">Home</Link>
                 {anime.map(
                     (a, index) => (
                         <div key={a.id}>

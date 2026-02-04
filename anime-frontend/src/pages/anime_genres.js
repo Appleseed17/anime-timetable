@@ -1,28 +1,40 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom"
 
-import { getAnimeByGenre } from "../api/animeApi";
+import { getAnimeByGenre, getPopularAnime } from "../api/animeApi";
 import { Options } from "../components/OptionsBar";
 
-export function AnimeGenre(genre){
-    const [anime, setAnime] = useState(null);
+export function AnimeGenre() {
+    const { genre } = useParams();
+    const [anime, setAnime] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    // var { genre } = useParams();
-
+    const displayGenre = genre ?? "Popular";
+    const page_size = 6;
     useEffect(() => {
-        getAnimeByGenre(genre)
+        setLoading(true);
+
+        const request = !genre
+            ? getPopularAnime(page_size)
+            : getAnimeByGenre(genre, page_size);
+
+        request
             .then(res => setAnime(res.data.content))
             .catch(console.error)
-    }, [genre])
-    console.log(genre)
-    if (!anime){
+            .finally(() => setLoading(false))
+        }, [genre]);
+
+    if (loading) {
         return <div>Loading...</div>;
     }
 
+    if (anime.length === 0) {
+        return <div>No anime found.</div>;
+    }
     return (
         
             <div className="background bg-blue-100 rounded-lg">
-                <h1 className="text-blue-900 text-3xl text-center ">{genre}</h1>
+                <h1 className="text-blue-900 text-3xl text-center ">{displayGenre}</h1>
                 <div className="grid grid-cols-2 gap-4 p-4 ">
                     {anime
                     .map(a => (
