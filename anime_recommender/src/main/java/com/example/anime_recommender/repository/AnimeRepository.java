@@ -53,7 +53,7 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer>{
     """)
     List<Anime> findWeeklyAnime(
         @Param("startOfWeek") LocalDate startOfWeek,
-        @Param("endOfWeek") LocalDate endOfWeek,
+        @Param("endOfWeek") LocalDate endOfWeek
     );
 
     @Query("""
