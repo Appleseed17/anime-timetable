@@ -32,11 +32,6 @@ public class AnimeApiRequests {
         this.animeRepository = animeRepository;
         this.webClient = webClient;
     }
-
-    //DB function to save all the animes into the db in a list of anime
-    public void saveMultiple(ArrayList<Anime> animes) {
-        animeRepository.saveAll(animes);
-    }  
    
     //Get client ID from .env file (protective)
     @Value("${Client_ID}")

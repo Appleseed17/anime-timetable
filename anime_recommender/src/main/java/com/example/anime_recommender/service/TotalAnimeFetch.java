@@ -1,6 +1,8 @@
 package com.example.anime_recommender.service;
 
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -47,8 +49,11 @@ public class TotalAnimeFetch {
     public ResponseEntity<String> fetchSeasonalAnime(){
         TimeService timeService  = new TimeService();
 
-        int curr_year = timeService.currSeasonYear();
-        Season curr_month = timeService.currSeasonMonth();
+        ZoneId timezone = ZoneId.of("UTC");
+        ZonedDateTime now = ZonedDateTime.now(timezone);
+
+        int curr_year = timeService.currSeasonYear(now);
+        Season curr_month = timeService.currSeasonMonth(now);
 
         String month_field = curr_month.getMalValue();
 

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.anime_recommender.model.Anime;
 import com.example.anime_recommender.repository.AnimeRepository;
 import com.example.anime_recommender.repository.projection.GenreCount;
-import com.example.anime_recommender.service.TimeService;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AnimeRecommender {
 
     private final AnimeRepository animeRepository;
-    private final TimeService timeService;
+   
     // This is the mapping in order to get a JSON request with the query parameters
     // it will use the list within the database of all anime, and create a smaller list with these parameters
     // from this list it will randomly select one
@@ -35,9 +35,9 @@ public class AnimeRecommender {
 
     
 
-public AnimeRecommender(AnimeRepository animeRepository, TimeService timeService) {
+public AnimeRecommender(AnimeRepository animeRepository) {
     this.animeRepository = animeRepository;
-    this.timeService = timeService;
+
     }
 
 
