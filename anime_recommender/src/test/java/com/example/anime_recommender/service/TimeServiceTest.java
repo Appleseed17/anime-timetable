@@ -25,6 +25,7 @@ public class TimeServiceTest {
         assertEquals(2025, currSeasonYear);
     }
 
+    // Subtracts 3 months from given date
     @Test 
     void prevSeasonYearTest() {
         int prevSeasonYear = timeService.prevSeasonYear(feb28);
@@ -37,6 +38,7 @@ public class TimeServiceTest {
         assertEquals(Season.SPRING, timeService.currSeasonMonth(feb28.plusMonths((3))));
     }
 
+    // Subtracts 3 months from given date
     @Test
     void prevSeasonMonthTest() {
         assertEquals(Season.FALL, timeService.prevSeasonMonth(feb28));
