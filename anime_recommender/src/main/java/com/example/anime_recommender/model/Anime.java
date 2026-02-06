@@ -91,9 +91,9 @@ public class Anime {
         private StartSeason startSeason;
         private Instant timeStamp;
         @JsonProperty("num_episodes")
-        private int num_episodes;
+        private Integer num_episodes;
         @JsonProperty("average_episode_duration")
-        private int average_episode_duration;
+        private Integer average_episode_duration;
         @Transient
         private NextAiring next_airing;
 
@@ -112,11 +112,11 @@ public class Anime {
             return next_airing;
         }
 
-        public int getEpisodeNum() {
+        public Integer getEpisodeNum() {
             return num_episodes;
         }
         
-        public int getEpisodeDuration() {
+        public Integer getEpisodeDuration() {
             return average_episode_duration;
         }
 
@@ -283,14 +283,15 @@ public class Anime {
         
         @Embeddable 
         public static class StartSeason {
-            private int year;
+            @Column(name = "anime_year")
+            private Integer year;
             
             @Enumerated(EnumType.STRING)
             private Season season;
 
             public StartSeason() {}
 
-            public int getYear() {
+            public Integer getYear() {
                 return year;
             }
 
@@ -312,7 +313,6 @@ public class Anime {
 
             @JsonProperty("day_of_the_week")
             public void setDay(String dayStr) {
-                System.out.println(dayStr);
                 if (dayStr == null || dayStr.isEmpty()) {
                     this.day_of_the_week = null;
                     return;

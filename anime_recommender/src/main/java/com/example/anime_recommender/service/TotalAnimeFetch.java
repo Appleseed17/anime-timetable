@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,10 +21,10 @@ import com.example.anime_recommender.model.Season;
 import com.example.anime_recommender.repository.AnimeRepository;
 
 import jakarta.annotation.PostConstruct;
-import jakarta.transaction.Transactional;
 
+
+@Profile("!test")
 @Service
-
 public class TotalAnimeFetch {
 
     private final AnimeRepository animeRepository;
@@ -33,13 +35,10 @@ public class TotalAnimeFetch {
         this.animeRepository = animeRepository;
         this.animeApiRequests = animeApiRequests;
     }
-
-    private ArrayList<Anime> list;
-    
     
     @PostConstruct
     public void runOnStartup() {
-        // animeRepository.deleteSeason(2025, Season.WINTER);
+
         fetchSeasonalAnime();  // Run immediately once
 
     }
@@ -56,26 +55,23 @@ public class TotalAnimeFetch {
         Season curr_month = timeService.currSeasonMonth(now);
 
         String month_field = curr_month.getMalValue();
-
+        
 
         System.out.println("starting weekly anime fetch...");
         try{
-        
-        list = animeApiRequests.saveSeasonalAnime(curr_year, month_field).get();
+
+        animeApiRequests.saveSeasonalAnime(curr_year, month_field).get();
 
         Instant beginning = Instant.now().minusSeconds(600);
         Instant end = Instant.now().plusSeconds(600);
         List<Integer> idList = animeRepository.findRecentQuery(beginning, end);
         
-        System.out.println(idList);
 
         for (int id : idList) {
-            System.out.println(id);
             animeApiRequests.saveAnimeById(id);
         }
-
+        
         System.out.println("weekly anime fetch complete");
-        System.out.println(list.size());
         return ResponseEntity.ok().build();
     
     }
