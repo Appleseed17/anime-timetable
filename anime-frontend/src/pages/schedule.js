@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 
 import { getSeasonalAnime } from "../api/animeApi";
 import { Options } from "../components/OptionsBar";
-import "../static/grid.css"
 
 
 export function Schedule() {
@@ -31,18 +30,19 @@ console.log(anime)
 
   return (
     Options(
-      <div> 
-        <div className="schedule-grid">
+      <div className="flex p-10"> 
+        <div className="grid grid-cols-7">
       {Object.entries(DAY_TO_COLUMN).map(([day, col]) => (
-        <div key={day} className="day-column">
-          <h3>{day}</h3>
+        <div key={day} className="flex flex-col">
+          <h3 className="flex justify-center items-center">{day}</h3>
           {anime
             .filter(a => a.broadcast.day_of_the_week === day)
             .map(a => (
-              <div key={a.id} className="anime-card">
+              <div key={a.id} className="flex flex-wrap flex-col justify-center items-center background bg-black bg-opacity-20">
                 <div>{a.title}</div>
                 <p>{a.broadcast.start_time}</p>
-                <Link to={`/anime/${a.id}`}> <img src={a.main_picture.medium} alt={a.title} width={120} /></Link>
+                <Link to={`/anime/${a.id}`}> <img className="w-52 h-60" src={a.main_picture.medium} alt={a.title} /></Link>
+                <p>{a.broadcast.day_of_the_week}</p>
 
                 
                   </div>
