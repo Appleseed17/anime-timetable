@@ -17,17 +17,18 @@ export async function getGenres() {
   const response = await axios.get(`${url}/api/anime/seasonal/genre`);
   return response;
 }
-export async function getAnimeByGenre(genre, size) {
+export async function getAnimeByGenre(genre, page, size) {
   const response = await axios.get(`${url}/api/anime/seasonal/genre/${genre}`, {params: {
+    page: page,
     size: size
   }});
   return response;
 }
 
-export async function getPopularAnime(size) {
+export async function getPopularAnime(page, size) {
   const response = await axios.get(`${url}/api/anime/seasonal/popular`,
      {params: {
-      page: 0,
+      page: page,
       size: size
      }});
      return response

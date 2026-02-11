@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 
 import { Schedule } from "./pages/schedule.js"
 import { AnimeInfo } from "./pages/anime.js"
-import { AnimeGenre } from "./pages/anime_genres.js";
+
 import { AnimeDiscover } from "./pages/discover.js";
 import { PopularAnime } from "./pages/popular.js";
 
@@ -11,7 +11,7 @@ import { PopularAnime } from "./pages/popular.js";
 function App() {
     return (
         <Routes>
-            <Route path="/schedule" element={<Schedule />} />
+            <Route path="/anime/schedule" element={<Schedule />} />
             <Route path="/anime/discover/Popular" element={<AnimeDiscover />} />
             <Route path="/anime/discover/:genre" element={<AnimeDiscover />} />
             <Route path="/anime/popular" element={<PopularAnime />} />  
