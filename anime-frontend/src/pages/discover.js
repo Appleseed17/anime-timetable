@@ -9,12 +9,10 @@ export function AnimeDiscover() {
   return (
     <Options>
       <div className="flex gap-8">
-        {/* Side genre column */}
         <div className="flex-none h-[80vh] overflow-y-auto">
           <AnimeGenres />
         </div>
 
-        {/* Main content */}
         <div className="flex-1">
           <AnimeGenre genre={genre} />
         </div>
