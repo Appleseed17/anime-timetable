@@ -56,8 +56,8 @@ export function AnimeGenre({ genre }) {
               
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-white text-center p-2 transition">
                   <div className="font-semibold text-sm">{a.alternative_titles.en ? a.alternative_titles.en : a.title}</div>
-                  {a.num_episodes && <div className="text-xs mt-1">Episodes: {a.num_episodes}</div>}
-                  {a.mean && <div className="text-xs">Score: {a.mean}</div>}
+                  {a.num_episodes===0 ? <div className="text-xs mt-1">Episodes: ?</div> :  <div className="text-xs mt-1">Episodes: {a.num_episodes}</div>}
+                  {a.mean===0 ? <div className="text-xs">Score: ?</div> : <div className="text-xs">Score: {a.mean}</div>}
                   
               </div>
               </Link>

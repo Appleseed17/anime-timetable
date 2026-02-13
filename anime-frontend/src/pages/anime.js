@@ -55,7 +55,7 @@ export function AnimeInfo() {
 
       {/* Title */}
       <h1 className="text-4xl font-bold text-center mb-8">
-        {anime.alternative_titles?.en ?? anime.title}
+        {anime.alternative_titles.en ? anime.alternative_titles.en : anime.title}
       </h1>
 
       {/* Top Section */}
@@ -103,6 +103,13 @@ export function AnimeInfo() {
                   : "N/A"
               }
             />
+            <Info label="MAL Link" 
+              value={<a href={"https://myanimelist.net/anime/" + anime.id}
+              className="hover:text-white underline"
+              >
+              {anime.alternative_titles.en ? anime.alternative_titles.en : anime.title}
+              </a>}
+              />
 
           </div>
         </div>

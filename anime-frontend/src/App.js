@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import { Schedule } from "./pages/schedule.js"
 import { AnimeInfo } from "./pages/anime.js"
@@ -17,7 +17,8 @@ function App() {
             <Route path="/anime/popular" element={<PopularAnime />} />  
             <Route path="/anime/:id" element={<AnimeInfo />} />
             
-            {/* Ongoing anime rankings, possibly add sort by genre etc */}
+             <Route path="*" element={<Navigate to="/anime/schedule" replace />} />
+            
         </Routes>
     )
 }

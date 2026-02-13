@@ -1,4 +1,5 @@
 import { NavLink, useLocation  } from "react-router-dom"
+import { Title } from "./Title";
 
 export function Options({ children }) {
   const options = [
@@ -9,6 +10,7 @@ export function Options({ children }) {
   const location = useLocation(); 
   
   return (
+    <Title>
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white">
       
       <nav className="flex justify-center gap-6 py-6">
@@ -46,5 +48,6 @@ export function Options({ children }) {
         {children}
       </div>
     </div>
+    </Title>
   );
 }
