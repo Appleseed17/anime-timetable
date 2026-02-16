@@ -321,7 +321,7 @@ public class Anime {
                 try {
                     this.day_of_the_week = DayOfWeek.valueOf(dayStr.toUpperCase().strip());
                 } catch (IllegalArgumentException e) {
-                    this.day_of_the_week = null; // or log a warning
+                    this.day_of_the_week = null; 
                 }
             }
 

@@ -116,11 +116,11 @@ public class AnimeApiRequests {
 
     // saves the anime webrequest. Used to separate errors between saving and API requests
 
-    public void saveAnimeById(int id) {
-        fetchAnimeById(id).thenApply(anime -> 
-            animeRepository.save(anime)
-        );
-    }
+    // public void saveAnimeById(int id) {
+    //     fetchAnimeById(id).thenApply(anime -> 
+    //         animeRepository.save(anime)
+    //     );
+    // }
 
 }
 

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.anime_recommender.service.TimeService.*;
 import com.example.anime_recommender.model.Anime;
+import com.example.anime_recommender.service.ScheduleService;
 import com.example.anime_recommender.model.Season;
 import com.example.anime_recommender.repository.AnimeRepository;
 
@@ -29,18 +30,19 @@ public class TotalAnimeFetch {
 
     private final AnimeRepository animeRepository;
     private final AnimeApiRequests animeApiRequests; 
-
+    private final ScheduleService scheduleService;
     
-    public TotalAnimeFetch(AnimeRepository animeRepository, AnimeApiRequests animeApiRequests) {
+    public TotalAnimeFetch(AnimeRepository animeRepository, AnimeApiRequests animeApiRequests, ScheduleService scheduleService) {
         this.animeRepository = animeRepository;
         this.animeApiRequests = animeApiRequests;
+        this.scheduleService = scheduleService;
     }
     
     @PostConstruct
     public void runOnStartup() {
 
         fetchSeasonalAnime();  // Run immediately once
-
+        
     }
 
 
@@ -67,9 +69,17 @@ public class TotalAnimeFetch {
         List<Integer> idList = animeRepository.findRecentQuery(beginning, end);
         
 
+        List<CompletableFuture<Anime>> futures = new ArrayList<>();
         for (int id : idList) {
-            animeApiRequests.saveAnimeById(id);
+            futures.add(animeApiRequests.fetchAnimeById(id)
+                .thenApply(anime -> animeRepository.save(anime))
+            );
         }
+
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+
+        
+        scheduleService.refreshCache();
         
         System.out.println("weekly anime fetch complete");
         return ResponseEntity.ok().build();
