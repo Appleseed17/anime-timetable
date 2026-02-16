@@ -32,3 +32,20 @@ export function convertJSTToLocal(dayOfWeek, timeString) {
   // Return JS Date object; browser will treat it as local time
   return broadcastJST;
 }
+
+
+
+export function convertDateToLocal(date, timeString){
+
+
+  const [year, month, day] = date.split("-").map(Number);
+  const [hours, minutes] = timeString.split(":").map(Number);
+
+  const start = new Date(year, month - 1, day, hours - 9, minutes)
+
+  return start
+
+
+
+
+}

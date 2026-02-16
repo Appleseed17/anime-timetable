@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom"
 
 import { getAnimeByID } from "../api/animeApi";
 import { Options } from "../components/OptionsBar";
-import { convertJSTToLocal } from "../utils/timezone";
+import { convertJSTToLocal, convertDateToLocal } from "../utils/timezone";
 
 function Info({ label, value }) {
   if (value === null || value === undefined) return null;
@@ -48,6 +48,7 @@ export function AnimeInfo() {
         return <div>Loading...</div>;
     }
     const date = convertJSTToLocal(anime.broadcast.day_of_the_week, anime.broadcast.start_time);
+    const start = convertDateToLocal(anime.start_date, anime.broadcast.start_time)
 
     return ( 
         <Options>
@@ -92,7 +93,7 @@ export function AnimeInfo() {
             <Info label="Status" value={anime.status ?? "?"} />
             <Info label="Source" value={anime.source ?? "?"} />
             <Info label="Rating" value={anime.rating ?? "?"} />
-            <Info label="Start Date" value={anime.start_date ?? "?"} />
+            <Info label="Start Date" value={`${start.getMonth() + 1}-${start.getDate()}-${start.getFullYear()}`?? "?"} />
             <Info label="End Date" value={anime.end_date ?? "?"} />
             <Info label="NSFW" value={anime.nsfw ?? "?"} />
             <Info
