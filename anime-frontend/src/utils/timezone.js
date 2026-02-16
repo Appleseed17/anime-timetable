@@ -2,42 +2,32 @@ export function convertJSTToLocal(dayOfWeek, timeString) {
   if (!dayOfWeek || !timeString) return null;
 
   const DAYS = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
-  const targetDayIndex = DAYS.indexOf(dayOfWeek.toUpperCase());
-  if (targetDayIndex === -1) return null;
+  const targetIndex = DAYS.indexOf(dayOfWeek.toUpperCase());
+  if (targetIndex === -1) return null;
 
   const [hours, minutes] = timeString.split(":").map(Number);
 
-  // Create a Date in JST for the *closest upcoming dayOfWeek* relative to today
-  const now = new Date();
-  
-  // Get current day in JST (add 9 hours)
-  const nowJST = new Date(now.getTime() + 9 * 60 * 60 * 1000);
-  const currentJSTDay = nowJST.getDay(); // 0=Sun, 6=Sat
+  // Current JST time
+  const nowUTC = new Date();
+  const nowJST = new Date(nowUTC.getTime() + 9 * 60 * 60 * 1000);
 
-  // Calculate how many days to add to get the target day
-  let dayDiff = targetDayIndex - currentJSTDay;
-  if (dayDiff < 0) dayDiff += 7; // ensure future or same week
+  // Start of JST week (Sunday)
+  const startOfWeek = new Date(nowJST);
+  startOfWeek.setUTCHours(0, 0, 0, 0);
+  startOfWeek.setUTCDate(startOfWeek.getUTCDate() - startOfWeek.getUTCDay());
 
-  // Create a new JST date for that day
-  const broadcastJST = new Date(
-    Date.UTC(
-      now.getUTCFullYear(),
-      now.getUTCMonth(),
-      now.getUTCDate() + dayDiff,
-      hours - 9, // UTC = JST - 9
-      minutes
-    )
-  );
+  // Map day-of-week to date in JST week
+  const broadcastJST = new Date(startOfWeek);
+  broadcastJST.setUTCDate(startOfWeek.getUTCDate() + targetIndex);
+  broadcastJST.setUTCHours(hours - 9, minutes, 0, 0); 
 
-  // Return JS Date object; browser will treat it as local time
   return broadcastJST;
 }
 
 
 
 export function convertDateToLocal(date, timeString){
-
-
+  
   const [year, month, day] = date.split("-").map(Number);
   const [hours, minutes] = timeString.split(":").map(Number);
 

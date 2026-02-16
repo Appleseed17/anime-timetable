@@ -37,12 +37,16 @@ export function Schedule() {
     })
     .filter(Boolean); // remove nulls
 
+    console.log(processedAnime)
+    
+  
   const animeByDay = DAYS.reduce((acc, day) => {
     acc[day] = processedAnime
       .filter((a) => a.localDay === day)
       .sort((a, b) => a.localDate - b.localDate); 
     return acc;
   }, {});
+  console.log(animeByDay)
 
   return (
     <Options>
