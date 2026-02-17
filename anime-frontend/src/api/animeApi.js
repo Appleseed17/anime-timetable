@@ -25,12 +25,21 @@ export async function getAnimeByGenre(genre, page, size) {
   return response;
 }
 
-export async function getPopularAnime(page, size) {
-  const response = await axios.get(`${url}/api/anime/seasonal/popular`,
-     {params: {
+export async function getPopularPage() {
+  const response = await axios.get(`${url}/api/anime/seasonal/popular/preview`);
+  return response;
+}
+export async function getDiscoverPopular(page, size) {
+  var response;
+  if (page === 0){
+    response = axios.get(`${url}/api/anime/seasonal/discover`)
+  }
+  else{
+    response = axios.get(`${url}/api/anime/seasonal/popular`, {params: {
       page: page,
       size: size
-     }});
-     return response
+    }})
+  }
+  return response
 }
 

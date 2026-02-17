@@ -31,11 +31,18 @@ public class TotalAnimeFetch {
     private final AnimeRepository animeRepository;
     private final AnimeApiRequests animeApiRequests; 
     private final ScheduleService scheduleService;
-    
-    public TotalAnimeFetch(AnimeRepository animeRepository, AnimeApiRequests animeApiRequests, ScheduleService scheduleService) {
+    private final PopularCacheService popularCacheService;
+
+    public TotalAnimeFetch(
+        AnimeRepository animeRepository, 
+        AnimeApiRequests animeApiRequests, 
+        ScheduleService scheduleService,
+        PopularCacheService popularCacheService
+    ) {
         this.animeRepository = animeRepository;
         this.animeApiRequests = animeApiRequests;
         this.scheduleService = scheduleService;
+        this.popularCacheService = popularCacheService;
     }
     
     @PostConstruct
@@ -80,7 +87,9 @@ public class TotalAnimeFetch {
 
         
         scheduleService.refreshCache();
-        
+        popularCacheService.refreshPopularPage();
+        popularCacheService.refreshPopularDiscover();
+
         System.out.println("weekly anime fetch complete");
         return ResponseEntity.ok().build();
     

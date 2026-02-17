@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom"
 
-import { getPopularAnime } from "../api/animeApi";
+import { getPopularPage } from "../api/animeApi";
 import { Options } from "../components/OptionsBar";
 
 function PodiumCard({ anime, place }) {
@@ -54,8 +54,8 @@ export function PopularAnime() {
     const [anime, setAnime] = useState(null);
 
     useEffect(() => {
-        getPopularAnime(0, 3)
-            .then(res => setAnime(res.data.content))
+        getPopularPage()
+            .then(res => setAnime(res.data))
             .catch(console.error)
     }, [])
     

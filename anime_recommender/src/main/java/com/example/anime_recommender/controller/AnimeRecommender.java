@@ -7,11 +7,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.anime_recommender.model.Anime;
 import com.example.anime_recommender.repository.AnimeRepository;
 import com.example.anime_recommender.repository.projection.GenreCount;
+import com.example.anime_recommender.service.PopularCacheService;
 import com.example.anime_recommender.service.ScheduleService;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
+import javax.print.attribute.standard.Media;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +30,7 @@ public class AnimeRecommender {
 
     private final AnimeRepository animeRepository;
     private final ScheduleService scheduleService;
+    private final PopularCacheService popularCacheService;
    
     // This is the mapping in order to get a JSON request with the query parameters
     // it will use the list within the database of all anime, and create a smaller list with these parameters
@@ -35,22 +39,31 @@ public class AnimeRecommender {
     // Some of these will be added into advanced search possibly, like if you want a random anime at 12 or 13 episodes only
     // this may be too complex so maybe the user selects the range itself that could be cool like on a graph or something awesome 
 
-public AnimeRecommender(AnimeRepository animeRepository, ScheduleService scheduleService) {
+public AnimeRecommender(AnimeRepository animeRepository, ScheduleService scheduleService, PopularCacheService popularCacheService) {
     this.animeRepository = animeRepository;
     this.scheduleService = scheduleService;
+    this.popularCacheService = popularCacheService;
 
     }
 
+@GetMapping(value = "/seasonal/discover", produces = MediaType.APPLICATION_JSON_VALUE)
+public String getDiscoverAll() {
+    return popularCacheService.getPopularDiscoverJSON();
+}
+
+@GetMapping(value = "/seasonal/popular/preview", produces = MediaType.APPLICATION_JSON_VALUE)
+public String getMostPopular() {
+    return popularCacheService.getPopularPageJSON();
+}
 
 @GetMapping("/seasonal/popular")
-public Page<Anime> getMostPopular(
+public Page<Anime> getAllPopular(
     Pageable pageable
 ) {
     return animeRepository.findMostPopular(pageable);
-
 }
 
-@GetMapping(value="/seasonal/weekly", produces = MediaType.APPLICATION_JSON_VALUE)
+@GetMapping(value = "/seasonal/weekly", produces = MediaType.APPLICATION_JSON_VALUE)
 public String getWeeklySchedule() {
     return scheduleService.getSchedule();
 }

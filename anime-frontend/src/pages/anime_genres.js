@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getAnimeByGenre, getPopularAnime } from "../api/animeApi";
+import { getAnimeByGenre, getDiscoverPopular } from "../api/animeApi";
 
 export function AnimeGenre({ genre }) {
   const [anime, setAnime] = useState([]);
@@ -21,12 +21,11 @@ export function AnimeGenre({ genre }) {
     setLoading(true);
 
     const request = !genre
-      ? getPopularAnime(page, page_size)
+      ? getDiscoverPopular(page, page_size)
       : getAnimeByGenre(genre, page, page_size);
 
     request
       .then((res) => {
-        console.log(res.data)
         setAnime(res.data.content || []);
         setTotalPages(res.data.totalPages || 1); 
       })

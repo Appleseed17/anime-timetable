@@ -13,8 +13,6 @@ import com.example.anime_recommender.repository.AnimeRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import jakarta.annotation.PostConstruct;
-
 
 @Service
 public class ScheduleService {
@@ -39,7 +37,7 @@ public class ScheduleService {
             e.printStackTrace();
             cachedScheduleJson = "[]"; 
         }
-        System.out.println("Completed Refresh");
+        System.out.println("Completed Schedule Refresh");
 
        
     }
