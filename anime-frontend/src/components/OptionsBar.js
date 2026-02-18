@@ -44,7 +44,7 @@ export function Options({ children }) {
         })}
       </nav>
 
-      <div className="px-6 max-w-7xl mx-auto">
+      <div className="px-3 sm:px-6 max-w-7xl mx-auto">
         {children}
       </div>
     </div>

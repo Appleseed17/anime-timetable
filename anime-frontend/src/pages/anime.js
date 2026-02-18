@@ -30,9 +30,9 @@ export function AnimeInfo() {
     const [anime, setAnime] = useState(null);
 
     var { id } = useParams();
-    console.log(id)
+    
     id = Number(id)
-    console.log("ID:" + id)
+    
 
     useEffect(() => {
         getAnimeByID(id)
@@ -47,8 +47,29 @@ export function AnimeInfo() {
      if (!anime) {
         return <div>Loading...</div>;
     }
-    const date = convertJSTToLocal(anime.broadcast.day_of_the_week, anime.broadcast.start_time);
-    const start = convertDateToLocal(anime.start_date, anime.broadcast.start_time)
+
+    var date;
+    if(anime.broadcast && anime.broadcast.day_of_the_week && anime.broadcast.start_time) {
+         date = convertJSTToLocal(anime.broadcast.day_of_the_week, anime.broadcast.start_time);
+    }
+    else{
+       date = null;
+    }
+
+    var start;
+    if(anime.broadcast && anime.start_date && anime.broadcast.start_time) {
+        start = convertDateToLocal(anime.start_date, anime.broadcast.start_time)
+    }
+    else{
+      start = new Date(anime.start_date)
+    }
+    var end;
+    if(anime.end_date){
+      end = new Date(anime.end_date)
+    }
+    else {
+      end = null
+    }
 
     return ( 
         <Options>
@@ -93,8 +114,8 @@ export function AnimeInfo() {
             <Info label="Status" value={anime.status ?? "?"} />
             <Info label="Source" value={anime.source ?? "?"} />
             <Info label="Rating" value={anime.rating ?? "?"} />
-            <Info label="Start Date" value={`${start.getMonth() + 1}-${start.getDate()}-${start.getFullYear()}`?? "?"} />
-            <Info label="End Date" value={anime.end_date ?? "?"} />
+            <Info label="Start Date" value={start ? `${start.getMonth() + 1}-${start.getDate()}-${start.getFullYear()}` : "?"} />
+            <Info label="End Date" value={end ? `${end.getMonth() + 1}-${end.getDate()}-${end.getFullYear()}` : "?"} />
             <Info label="NSFW" value={anime.nsfw ?? "?"} />
             <Info
               label="Broadcast"

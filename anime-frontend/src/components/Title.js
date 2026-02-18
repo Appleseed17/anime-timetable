@@ -29,7 +29,7 @@ export function Title({ children }) {
         </div>
       </header>
 
-      <main className="px-6 max-w-7xl mx-auto py-6">
+      <main className="px-3 sm:px-4 md:px-6 max-w-7xl mx-auto py-4 md:py-6">
         {children}
       </main>
     </div>
