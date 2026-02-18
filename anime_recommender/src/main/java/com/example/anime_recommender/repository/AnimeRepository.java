@@ -32,7 +32,7 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer>{
         WHERE a.timeStamp < :oldTimeStamp
     """)
     int deleteOldEntries ( 
-        @Param("OldStamp") Instant oldTimeStamp
+        @Param("oldTimeStamp") Instant oldTimeStamp
     );
 
     @Query("""
@@ -48,7 +48,7 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer>{
         a.status = 'currently_airing' 
         OR a.status = 'not_yet_aired'
             )
-        
+        AND a.media_type != 'music'
         ORDER BY a.broadcast.day_of_the_week ASC, a.broadcast.start_time ASC
     """)
     List<Anime> findWeeklyAnime(
@@ -58,13 +58,8 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer>{
 
     @Query("""
         SELECT a FROM Anime a
-        WHERE a.num_list_users IS NOT NULL
-        AND a.broadcast.day_of_the_week IS NOT NULL
-        AND a.broadcast.start_time IS NOT NULL
-        AND (
-            a.status = 'currently_airing'
-            OR a.status = 'not_yet_aired'
-            )
+        WHERE a.rank IS NOT NULL
+        AND a.media_type != 'music'
         ORDER BY a.rank ASC, a.popularity ASC, a.num_list_users ASC
     """)
     Page<Anime> findMostPopular(
@@ -87,12 +82,7 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer>{
         FROM Anime a
         JOIN a.genres g
         WHERE g.name = :genreName
-        AND a.broadcast.day_of_the_week IS NOT NULL
-        AND a.broadcast.start_time IS NOT NULL
-        AND (
-            a.status = 'currently_airing'
-            OR a.status = 'not_yet_aired'
-            )
+        AND a.media_type != 'music'
         ORDER BY 
             rank NULLS LAST,
             rank ASC, 
@@ -104,12 +94,7 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer>{
         SELECT DISTINCT COUNT(a) as count, g.name as name
         FROM Anime a
         JOIN a.genres g
-        WHERE a.broadcast.day_of_the_week IS NOT NULL
-        AND a.broadcast.start_time IS NOT NULL
-        AND (
-            a.status = 'currently_airing'
-            OR a.status = 'not_yet_aired'
-            )
+        WHERE a.media_type != 'music'
         GROUP BY g.name
         ORDER BY count DESC
             """)

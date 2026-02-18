@@ -3,6 +3,7 @@ package com.example.anime_recommender.service;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -49,7 +50,12 @@ public class TotalAnimeFetch {
     public void runOnStartup() {
 
         fetchSeasonalAnime();  // Run immediately once
-        
+    }
+
+    public void deleteExpiredEntries() {
+
+
+
     }
 
 
@@ -85,7 +91,8 @@ public class TotalAnimeFetch {
 
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
 
-        
+        animeRepository.deleteOldEntries(Instant.now().minus(6, ChronoUnit.DAYS));
+
         scheduleService.refreshCache();
         popularCacheService.refreshPopularPage();
         popularCacheService.refreshPopularDiscover();
