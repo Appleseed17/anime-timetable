@@ -13,7 +13,13 @@ export function Options({ children }) {
     <Title>
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white">
       
-      <nav className="flex justify-center gap-6 py-6">
+      <nav className="
+                    flex
+              justify-center
+              gap-2 sm:gap-6
+              py-4 sm:py-6
+              px-2
+        ">
         {options.map(({ label, to }) => {
           // Custom active logic:
           let active = false;
@@ -28,15 +34,20 @@ export function Options({ children }) {
               key={to}
               to={to}
               className={`
-                px-6 py-2 rounded-full text-sm font-semibold tracking-wide
-                transition-all duration-300
-                backdrop-blur-md
-                border border-white/10
-                ${active
-                  ? "bg-gradient-to-r from-purple-500 to-blue-500 shadow-lg shadow-purple-500/40 scale-105"
-                  : "bg-white/5 hover:bg-white/10 hover:scale-105"
-                }
-              `}
+                  flex-1 sm:flex-none
+                  text-center
+                  px-2 py-2 sm:px-6 sm:py-2
+                  rounded-full
+                  text-xs sm:text-sm
+                  font-semibold tracking-wide
+                  transition-colors duration-300
+                  backdrop-blur-md
+                  border border-white/10
+                  ${active
+                    ? "bg-gradient-to-r from-purple-500 to-blue-500 shadow-md"
+                    : "bg-white/5 hover:bg-white/10"
+                  }
+                `}
             >
               {label}
             </NavLink>

@@ -40,7 +40,7 @@ export function AnimeGenre({ genre }) {
     <div className="bg-white/5 backdrop-blur-md rounded-lg p-4 shadow-lg">
         <h1 className="text-white text-3xl text-center mb-4 font-semibold">{displayGenre}</h1>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {anime.map((a) => (
             <div
               key={a.id}
@@ -50,7 +50,7 @@ export function AnimeGenre({ genre }) {
                   <img
                   src={a.main_picture.medium}
                   alt={a.alternative_titles.en ? a.alternative_titles.en : a.title}
-                  className="w-full h-44 object-cover rounded-t-lg"
+                  className="w-full h-44 sm:h-52 md:h-44 object-cover rounded-t-lg"
                   />
               
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-white text-center p-2 transition">
@@ -61,7 +61,7 @@ export function AnimeGenre({ genre }) {
               </div>
               </Link>
 
-              <div className="p-2 text-center font-semibold text-white">
+              <div className="p-2 text-center font-semibold text-white text-sm sm:text-base">
                   {a.alternative_titles.en ? a.alternative_titles.en : a.title}
               </div>
               </div>
@@ -70,25 +70,51 @@ export function AnimeGenre({ genre }) {
 
           {/* Pagination */}
           {totalPages > 1 && (
-          <div className="flex justify-center gap-2 mt-4">
-              <button
-                className="px-3 py-1 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded hover:scale-105 shadow-md disabled:opacity-50 transition-all"
-                disabled={page === 0}
-                onClick={() => setPage((p) => Math.max(p - 1, 0))}
-              >
-              Previous
-              </button>
-              <span className="px-2 py-1 text-white font-semibold">
-              Page {page + 1} / {totalPages}
-              </span>
-              <button
-                className="px-3 py-1 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded hover:scale-105 shadow-md disabled:opacity-50 transition-all"
-                disabled={page === totalPages - 1}
-                onClick={() => setPage((p) => Math.min(p + 1, totalPages - 1))}
+            <div className="flex justify-center items-center gap-2 mt-4">
+              
+              {/* Desktop / Tablet: full buttons */}
+              <div className="hidden sm:flex gap-2">
+                <button
+                  className="px-3 py-1 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded hover:scale-105 shadow-md disabled:opacity-50 transition-all"
+                  disabled={page === 0}
+                  onClick={() => setPage((p) => Math.max(p - 1, 0))}
                 >
-                Next
-              </button>
-          </div>
+                  Previous
+                </button>
+                <span className="px-2 py-1 text-white font-semibold">
+                  Page {page + 1} / {totalPages}
+                </span>
+                <button
+                  className="px-3 py-1 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded hover:scale-105 shadow-md disabled:opacity-50 transition-all"
+                  disabled={page === totalPages - 1}
+                  onClick={() => setPage((p) => Math.min(p + 1, totalPages - 1))}
+                >
+                  Next
+                </button>
+              </div>
+
+              {/* Mobile: simplified */}
+              <div className="flex sm:hidden items-center gap-4 text-white font-semibold">
+                <button
+                  className="px-3 py-1 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded hover:scale-105 shadow-md disabled:opacity-50 transition-all"
+                  disabled={page === 0}
+                  onClick={() => setPage((p) => Math.max(p - 1, 0))}
+                >
+                  &#60; 
+                </button>
+                <span>
+                  {page + 1} / {totalPages}
+                </span>
+                <button
+                  className="px-3 py-1 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded hover:scale-105 shadow-md disabled:opacity-50 transition-all"
+                  disabled={page === totalPages - 1}
+                  onClick={() => setPage((p) => Math.min(p + 1, totalPages - 1))}
+                >
+                  &#62; 
+                </button>
+              </div>
+              
+            </div>
           )}
       </div>
       );

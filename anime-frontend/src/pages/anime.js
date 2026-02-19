@@ -76,7 +76,7 @@ export function AnimeInfo() {
     <div className="bg-white/5 backdrop-blur-md rounded-xl p-8 shadow-xl text-white">
 
       {/* Title */}
-      <h1 className="text-4xl font-bold text-center mb-8">
+      <h1 className="text-xl sm:text-2xl md:text-4xl font-bold text-center mb-8">
         {anime.alternative_titles.en ? anime.alternative_titles.en : anime.title}
       </h1>
 
@@ -99,7 +99,7 @@ export function AnimeInfo() {
             Details
           </h2>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
 
             <Info label="Score" value={anime.mean ?? "?"} />
             <Info label="Rank" value={anime.rank ?? "?"} />

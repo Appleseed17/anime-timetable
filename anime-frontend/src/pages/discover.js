@@ -8,11 +8,13 @@ export function AnimeDiscover() {
 
   return (
     <Options>
-      <div className="flex gap-8">
-        <div className="flex-none h-[80vh] overflow-y-auto">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-8">
+        {/* Genre bar */}
+        <div className="flex md:flex-none md:h-[80vh] overflow-x-auto md:overflow-y-auto">
           <AnimeGenres />
         </div>
 
+        {/* Main content */}
         <div className="flex-1">
           <AnimeGenre genre={genre} />
         </div>
