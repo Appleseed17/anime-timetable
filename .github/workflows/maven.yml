@@ -35,6 +35,4 @@ jobs:
       working-directory: anime_recommender
       env:
         Client_ID: ${{ secrets.CLIENT_ID }}
-        db_url: ${{ secrets.DB_URL }}
-        db_UserName: ${{ secrets.DB_USERNAME }}
-        db_password: ${{ secrets.DB_PASSWORD }}
+        allowed_origins: ${{ secrets.ALLOWED_ORIGINS }}
