@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>anime_recommender</artifactId>
+	<artifactId>anime_schedule</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>anime_recommender</name>
-	<description>Demo project for Spring Boot</description>
+	<name>anime_schedule</name>
+	<description>Anime Schedule powered by MAL API.</description>
 	<url/>
 	<licenses>
 		<license/>

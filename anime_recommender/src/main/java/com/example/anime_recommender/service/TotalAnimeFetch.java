@@ -8,17 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.example.anime_recommender.service.TimeService.*;
 import com.example.anime_recommender.model.Anime;
-import com.example.anime_recommender.service.ScheduleService;
 import com.example.anime_recommender.model.Season;
 import com.example.anime_recommender.repository.AnimeRepository;
 
@@ -51,13 +47,6 @@ public class TotalAnimeFetch {
 
         fetchSeasonalAnime();  // Run immediately once
     }
-
-    public void deleteExpiredEntries() {
-
-
-
-    }
-
 
     @Scheduled(cron ="0 0 2 ? * SUN") 
     public ResponseEntity<String> fetchSeasonalAnime(){

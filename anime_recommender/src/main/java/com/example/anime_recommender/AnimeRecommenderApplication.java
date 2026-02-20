@@ -24,7 +24,8 @@ public class AnimeRecommenderApplication {
 			"spring.datasource.url", dotenv.get("db_url"),
 			"spring.datasource.username", dotenv.get("db_UserName"),
 			"spring.datasource.password", dotenv.get("db_password"),
-			"Client_ID", dotenv.get("Client_ID")
+			"Client_ID", dotenv.get("Client_ID"),
+			"allowed_origins", dotenv.get("allowed_origins")
 		));
 		app.run(args);
 	}

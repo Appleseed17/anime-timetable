@@ -1,7 +1,5 @@
 package com.example.anime_recommender.controller;
 
-
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.anime_recommender.model.Anime;
@@ -10,11 +8,8 @@ import com.example.anime_recommender.repository.projection.GenreCount;
 import com.example.anime_recommender.service.PopularCacheService;
 import com.example.anime_recommender.service.ScheduleService;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
-import javax.print.attribute.standard.Media;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,30 +27,27 @@ public class AnimeRecommender {
     private final ScheduleService scheduleService;
     private final PopularCacheService popularCacheService;
    
-    // This is the mapping in order to get a JSON request with the query parameters
-    // it will use the list within the database of all anime, and create a smaller list with these parameters
-    // from this list it will randomly select one
-    // query methods will include: genres, rank ranges, studios, score ranges, ep number ranges, episode length ranges, ongoing or concluded
-    // Some of these will be added into advanced search possibly, like if you want a random anime at 12 or 13 episodes only
-    // this may be too complex so maybe the user selects the range itself that could be cool like on a graph or something awesome 
 
 public AnimeRecommender(AnimeRepository animeRepository, ScheduleService scheduleService, PopularCacheService popularCacheService) {
     this.animeRepository = animeRepository;
     this.scheduleService = scheduleService;
     this.popularCacheService = popularCacheService;
-
     }
 
+// Discover page with the initial cached popular first page (recached every week)
 @GetMapping(value = "/seasonal/discover", produces = MediaType.APPLICATION_JSON_VALUE)
 public String getDiscoverAll() {
     return popularCacheService.getPopularDiscoverJSON();
 }
 
+// Cached top 3 most popular anime (recached every week)
 @GetMapping(value = "/seasonal/popular/preview", produces = MediaType.APPLICATION_JSON_VALUE)
 public String getMostPopular() {
     return popularCacheService.getPopularPageJSON();
 }
 
+// PARAMS: Pageable
+// returns page of most popular anime oganized by desc rank
 @GetMapping("/seasonal/popular")
 public Page<Anime> getAllPopular(
     Pageable pageable
@@ -63,16 +55,20 @@ public Page<Anime> getAllPopular(
     return animeRepository.findMostPopular(pageable);
 }
 
+// Weekly anime schedule (Cached every week)
 @GetMapping(value = "/seasonal/weekly", produces = MediaType.APPLICATION_JSON_VALUE)
 public String getWeeklySchedule() {
     return scheduleService.getSchedule();
 }
 
+// Gets all genres and their counts
 @GetMapping("seasonal/genre")
 public List<GenreCount> getGenres(){
     return animeRepository.findSeasonalGenreCounts();
 }
 
+// PARAMS: Pageable
+// gets anime for this genre
 @GetMapping("seasonal/genre/{genre_name}")
 public Page<Anime> getAnimeByGenre(
     @PathVariable String genre_name,
@@ -81,6 +77,8 @@ public Page<Anime> getAnimeByGenre(
     return animeRepository.findByGenresName(genre_name, pageable);
 }
 
+// PARAMS: pageable
+// Returns anime object if exists
 @GetMapping("/{id}")
 public Optional<Anime> getAnime(@PathVariable int id){
     return animeRepository.findById(id);

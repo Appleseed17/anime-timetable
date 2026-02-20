@@ -114,14 +114,6 @@ public class AnimeApiRequests {
                  //will be completed asynchronously
     }
 
-    // saves the anime webrequest. Used to separate errors between saving and API requests
-
-    // public void saveAnimeById(int id) {
-    //     fetchAnimeById(id).thenApply(anime -> 
-    //         animeRepository.save(anime)
-    //     );
-    // }
-
 }
 
 
