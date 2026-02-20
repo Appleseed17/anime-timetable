@@ -26,6 +26,7 @@ class AnimeRecommenderApplicationTests {
 		}
 		if (dotenv != null) {
 			System.setProperty("Client_ID", dotenv.get("Client_ID"));
+			System.setProperty("allowed_origins", dotenv.get("allowed_origins"));
 			
 		}
 	
