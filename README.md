@@ -1,5 +1,6 @@
 # Anime Timetable
 Anime Timetable is a full-stack web application that allows users to view ongoing seasonal anime and discover new enjoyable anime based on popularity or their favorite genre!<br>
+
 This project integrates the MyAnimeList API and requires an API key to run locally.<br>
 
 This is project is both a passion project to create something that I find to be useful for my friends and I, while challenging myself to new technologies!
@@ -47,7 +48,9 @@ variables are found in
 anime_recommender/src/main/java/com/example/anime_recommender/AnimeRecommenderApplication.java
 ```
 3 variables are for your database, 1 is for MAL API key, allowed_origins should be your frontend port. <br>
+
 allowed_origins = "https://localhost:XXXX"<br>
+
 This is allows your front end to connect to the backend endpoints!<br>
 ```bash
 cd anime_recommender
