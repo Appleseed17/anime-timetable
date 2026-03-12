@@ -3,8 +3,6 @@ import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.Year;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.OnDelete;
@@ -14,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import ch.qos.logback.core.pattern.parser.Node;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -33,9 +30,6 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
-import com.example.anime_recommender.model.Season;
-import com.example.anime_recommender.model.NextAiring;
-
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "anime")
@@ -43,20 +37,44 @@ public class Anime {
         @Id
         private int id;
         private String title;
-        @Embedded
-        private Picture main_picture;
-        @Embedded
-        private AlternativeTitles alternative_titles;
         private LocalDate start_date;
         private LocalDate end_date;
-        @Column(length = 5000)
-        private String synopsis;
         private Double mean;
         private Integer rank;
         private Integer popularity;
         private Integer num_list_users;
         private Integer num_scoring_users;
         private String nsfw;
+        private Instant created_at;
+        private Instant updated_at;
+        private String media_type;
+        private String status;
+        private String source;
+        private String rating;
+        private Instant timeStamp;
+        @JsonProperty("num_episodes")
+        private Integer num_episodes;
+        @JsonProperty("average_episode_duration")
+        private Integer average_episode_duration;
+        @Transient
+        private NextAiring next_airing;
+
+        @Embedded
+        private Picture main_picture;
+
+        @Embedded
+        private AlternativeTitles alternative_titles;
+        
+        @Embedded
+        private Broadcast broadcast;
+
+        @Embedded
+        @JsonProperty("start_season")
+        private StartSeason startSeason;
+
+        @Column(length = 5000)
+        private String synopsis;
+
         @ManyToMany(cascade = CascadeType.ALL)
         @JoinTable(
         name = "anime_genres",
@@ -66,14 +84,6 @@ public class Anime {
         @OnDelete(action = OnDeleteAction.CASCADE)
         private List<Genre> genres;
 
-        private Instant created_at;
-        
-        private Instant updated_at;
-        private String media_type;
-        private String status;
-        
-        private String source;
-        private String rating;
         @ManyToMany(cascade = CascadeType.ALL)
         @JoinTable(
         name = "anime_studios",
@@ -81,21 +91,11 @@ public class Anime {
         inverseJoinColumns = @JoinColumn(name = "studio_id"))
         @OnDelete(action = OnDeleteAction.CASCADE)
         private List<Studio> studios;
-        @Embedded
-        private Broadcast broadcast;
+
         @ElementCollection
         @CollectionTable(name = "related_anime", joinColumns = @JoinColumn(name = "anime_id"))
         private List<Container> related_anime;
-        @Embedded
-        @JsonProperty("start_season")
-        private StartSeason startSeason;
-        private Instant timeStamp;
-        @JsonProperty("num_episodes")
-        private Integer num_episodes;
-        @JsonProperty("average_episode_duration")
-        private Integer average_episode_duration;
-        @Transient
-        private NextAiring next_airing;
+
 
         public void computeNextAiring() {
             if (broadcast != null) {
@@ -367,7 +367,6 @@ public class Anime {
             public Picture getMain_picture() {
                 return main_picture;
             }
-
         }
         
     }

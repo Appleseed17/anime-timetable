@@ -1,7 +1,6 @@
 package com.example.anime_recommender.service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
+//Caches the weekly schedule as a JSON string
 @Service
 public class ScheduleService {
     private String cachedScheduleJson; 

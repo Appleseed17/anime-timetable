@@ -8,6 +8,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
+
+    //Only allowing front end to access endpoints
     @Value("${allowed_origins}")
 	private String allowed_origins;
 

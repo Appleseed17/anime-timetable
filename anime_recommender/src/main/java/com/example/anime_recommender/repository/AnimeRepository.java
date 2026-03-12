@@ -3,9 +3,7 @@ package com.example.anime_recommender.repository;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
-import org.antlr.v4.runtime.atn.SemanticContext.AND;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,7 +13,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.anime_recommender.model.Anime;
-import com.example.anime_recommender.model.Season;
 import com.example.anime_recommender.repository.projection.GenreCount;
 
 import jakarta.transaction.Transactional;

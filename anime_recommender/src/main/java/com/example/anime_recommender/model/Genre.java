@@ -8,7 +8,6 @@ public class Genre {
 
         @Id
         private int id;
-
         private String name;
 
         public int getId() {

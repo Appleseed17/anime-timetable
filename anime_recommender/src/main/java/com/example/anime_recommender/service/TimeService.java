@@ -6,6 +6,7 @@ import java.time.ZonedDateTime;
 
 import org.springframework.stereotype.Service;
 
+//Class for recovering current and previous Season based off a ZonedDateTime stamp
 @Service
 public class TimeService {
 

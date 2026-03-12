@@ -16,6 +16,7 @@ public class AnimeApiRequestsTest {
     @Autowired
     private AnimeApiRequests animeApiRequests;
 
+    // Tests api retrieval + casting to different objects
     @Test
     void fetchSeasonalAnimeTest() {
         AnimeApiResponse response = animeApiRequests.fetchSeasonalAnime(2025, "winter").join();
@@ -23,6 +24,7 @@ public class AnimeApiRequestsTest {
         assertTrue(size > 0);    
     }
 
+    //Tests getting the exact anime by id
     @Test
     void fetchAnimeByIdTest() {
         Anime anime = animeApiRequests.fetchAnimeById(21).join();

@@ -44,11 +44,11 @@ public class TotalAnimeFetch {
     
     @PostConstruct
     public void runOnStartup() {
-
         fetchSeasonalAnime();  // Run immediately once
     }
 
-    @Scheduled(cron ="0 0 2 ? * SUN") 
+    //Retrieve current season of anime weekly
+    @Scheduled(cron ="0 0 2 ? * SUN") //2:00 am on Sundays
     public ResponseEntity<String> fetchSeasonalAnime(){
         TimeService timeService  = new TimeService();
 
@@ -60,7 +60,6 @@ public class TotalAnimeFetch {
 
         String month_field = curr_month.getMalValue();
         
-
         System.out.println("starting weekly anime fetch...");
         try{
 

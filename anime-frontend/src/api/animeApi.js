@@ -1,6 +1,8 @@
 import axios from "axios";
 
+//used for accessing front end endpoints
 
+//TODO: CHANGE INTO ENV SECRET
 const url = "http://localhost:8080"
 
 export async function getSeasonalAnime() {

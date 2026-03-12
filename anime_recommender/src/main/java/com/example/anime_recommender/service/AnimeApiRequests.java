@@ -15,7 +15,6 @@ import com.example.anime_recommender.model.Anime;
 import com.example.anime_recommender.model.AnimeApiResponse;
 import com.example.anime_recommender.repository.AnimeRepository;
 import jakarta.transaction.Transactional;
-import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
 import com.example.anime_recommender.model.AnimeNode;
@@ -33,7 +32,6 @@ public class AnimeApiRequests {
         this.webClient = webClient;
     }
    
-    //Get client ID from .env file (protective)
     @Value("${Client_ID}")
 	private String Client_ID;
 
@@ -49,15 +47,14 @@ public class AnimeApiRequests {
                                             .queryParam("fields", "id,title,main_picture,alternative_titles,start_date,mean,rank,popularity,num_episodes,start_season,nsfw")
                                             .build(year, season))           //build uri with the respective query parameters
                 .header("X-MAL-CLIENT-ID", Client_ID) //set headers
-                .retrieve()                                     //retrieeve results
-                        //Retrieve API status if there is error
-                .onStatus(
+                .retrieve()  //->body to AnimeApiResponse                                   
+                .onStatus(  //retrieve API status if there is error
                     HttpStatusCode::isError,
                     clientResponse -> clientResponse.createException()
     )             
-                    //covert to AnimeApiResponse                                                                
+                 //covert to AnimeApiResponse                                                                
                 .bodyToMono(AnimeApiResponse.class)
-                .retryWhen(
+                .retryWhen( //retry logic
                     Retry.backoff(3, Duration.ofSeconds(2))
                     .filter(ex -> 
                         ex instanceof WebClientResponseException wce &&
@@ -72,7 +69,7 @@ public class AnimeApiRequests {
        
     ArrayList<Anime> animeList = new ArrayList<>();
        return fetchSeasonalAnime(year, season).thenApply(animes -> {
-             // Explicitly define the 'animes' variable type as AnimeApiResponse
+             //Explicitly define the 'animes' variable type as AnimeApiResponse
             AnimeApiResponse animeResponse = animes;
             ArrayList<AnimeNode> nodes = animeResponse.getData();
             
@@ -94,15 +91,14 @@ public class AnimeApiRequests {
         .uri(uriBuilder -> uriBuilder.path("/{id}")
                                             .queryParam("nsfw", true)
                                             .queryParam("fields", "id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics")
-                                            .build(id))           //build uri with the respective query parameters
-                .header("X-MAL-CLIENT-ID", Client_ID) //set headers
-                .retrieve()                                     //retrieeve results
-                        //Retrieve API status if there is error
-                .onStatus(
+                                            .build(id))           
+                .header("X-MAL-CLIENT-ID", Client_ID) 
+                .retrieve()                                     
+                .onStatus( 
                     HttpStatusCode::isError,
                     clientResponse -> clientResponse.createException()
                 )             
-                    //covert to AnimeApiResponse                                                                
+                //covert to Anime                                                              
                 .bodyToMono(Anime.class)
                 .retryWhen(
                     Retry.backoff(3, Duration.ofSeconds(2))
@@ -111,7 +107,6 @@ public class AnimeApiRequests {
                         wce.getStatusCode().is5xxServerError())
                 )
                 .toFuture();
-                 //will be completed asynchronously
     }
 
 }

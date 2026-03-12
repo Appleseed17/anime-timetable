@@ -12,6 +12,7 @@ import com.example.anime_recommender.repository.AnimeRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+//Caches Queries as a JSON string for endpoints
 @Service
 public class PopularCacheService {
     

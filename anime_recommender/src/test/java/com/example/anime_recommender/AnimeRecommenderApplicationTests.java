@@ -17,7 +17,7 @@ import io.github.cdimascio.dotenv.DotenvException;
 class AnimeRecommenderApplicationTests {
 
 	static {
-	
+		//Prevent dotenv errors (This may be unnecessary because had another dotenv issue that was solved)
 		Dotenv dotenv = null;
 		try {
 			dotenv = Dotenv.load();

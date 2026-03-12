@@ -24,8 +24,6 @@ export function convertJSTToLocal(dayOfWeek, timeString) {
   return broadcastJST;
 }
 
-
-
 export function convertDateToLocal(date, timeString){
   
   const [year, month, day] = date.split("-").map(Number);
