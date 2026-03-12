@@ -28,7 +28,7 @@ jobs:
       # Build Frontend
       - name: Build Frontend Docker image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/mal-frontend:latest -f ./anime-frontend/Dockerfile ./anime-frontend
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/mal-frontend:latest -f ./anime_frontend/Dockerfile ./anime_frontend
 
       # Push Backend
       - name: Push Backend Docker image
