@@ -31,6 +31,7 @@ export async function getPopularPage() {
   const response = await axios.get(`${url}/api/anime/seasonal/popular/preview`);
   return response;
 }
+
 export async function getDiscoverPopular(page, size) {
   var response;
   if (page === 0){
@@ -44,4 +45,3 @@ export async function getDiscoverPopular(page, size) {
   }
   return response
 }
-
