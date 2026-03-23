@@ -57,7 +57,7 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer>{
         SELECT a FROM Anime a
         WHERE a.rank IS NOT NULL
         AND a.media_type != 'music'
-        ORDER BY a.rank ASC, a.popularity ASC, a.num_list_users ASC
+        ORDER BY a.rank ASC, a.num_list_users DESC
     """)
     Page<Anime> findMostPopular(
         Pageable pageable

@@ -22,6 +22,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -32,7 +33,11 @@ import jakarta.persistence.Transient;
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Table(name = "anime")
+@Table(name = "anime",
+    indexes = {
+        @Index(name = "idx_rank", columnList = "rank ASC, num_list_users DESC")
+    }
+)
 public class Anime {
         @Id
         private int id;
