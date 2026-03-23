@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getAnimeByGenre, getDiscoverPopular } from "../api/animeApi";
+import { Loading } from "../components/loading";
 
 export function AnimeGenre({ genre }) {
   const [anime, setAnime] = useState([]);
@@ -33,7 +34,7 @@ export function AnimeGenre({ genre }) {
       .finally(() => setLoading(false));
   }, [genre, page]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading></Loading>;
   if (anime.length === 0) return <div>No anime found.</div>;
 
   return (

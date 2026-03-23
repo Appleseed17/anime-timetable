@@ -5,6 +5,7 @@ import { getAnimeByID } from "../api/animeApi";
 import { Options } from "../components/OptionsBar";
 import { convertJSTToLocal, convertDateToLocal } from "../utils/timezone";
 
+import { Loading } from "../components/loading";
 //Function is used to Insert anime info and reformat database like strings
 function Info({ label, value }) {
   if (value === null || value === undefined) return null;
@@ -43,9 +44,9 @@ export function AnimeInfo() {
 
 
      if (!anime) {
-        return <div>Loading...</div>;
+        return <Options><Loading></Loading></Options>;
     }
-
+    
     //Convert JST times to users local time
     var date;
     if(anime.broadcast && anime.broadcast.day_of_the_week && anime.broadcast.start_time) {

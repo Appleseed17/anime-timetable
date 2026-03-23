@@ -3,6 +3,8 @@ import { NavLink, useLocation } from "react-router-dom"
 
 import { getGenres } from "../api/animeApi";
 
+import { Loading } from "./loading.js"
+
 export function AnimeGenres() {
   const [genres, setGenres] = useState(null);
   const [expanded, setExpanded] = useState(false);
@@ -14,7 +16,11 @@ export function AnimeGenres() {
       .catch(console.error);
   }, []);
 
-  if (!genres) return <div>Loading...</div>;
+  if (!genres) return(
+    <div className="hidden md:flex flex-col bg-white/5 backdrop-blur-md rounded-lg w-48 p-2 shadow-lg max-h-[80vh] overflow-y-auto gap-2">
+      <Loading></Loading>
+    </div>
+);
 
   // For desktop: only show first 8 if not expanded
   const visibleGenres = expanded ? genres : genres.slice(0, 8);

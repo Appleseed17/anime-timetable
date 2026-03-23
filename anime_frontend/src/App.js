@@ -7,7 +7,6 @@ import { AnimeDiscover } from "./pages/discover.js";
 import { PopularAnime } from "./pages/popular.js";
 
 
-
 function App() {
     return (
         <Routes>
@@ -17,7 +16,7 @@ function App() {
             <Route path="/anime/popular" element={<PopularAnime />} />  
             <Route path="/anime/:id" element={<AnimeInfo />} />
             
-             <Route path="*" element={<Navigate to="/anime/schedule" replace />} />
+            <Route path="*" element={<Navigate to="/anime/schedule" replace />} />
             
         </Routes>
     )

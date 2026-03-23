@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 
 import { getPopularPage } from "../api/animeApi";
 import { Options } from "../components/OptionsBar";
+import { Loading } from "../components/loading";
 
 function PodiumCard({ anime, place }) {
   const isFirst = place === 1;
@@ -72,8 +73,8 @@ export function PopularAnime() {
       .catch(console.error);
   }, []);
 
-  if (!anime) return <div>Loading...</div>;
-
+  if (!anime) return <Options><Loading></Loading></Options>;
+  
   const [first, second, third] = anime;
 
   return (
