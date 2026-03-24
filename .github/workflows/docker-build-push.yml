@@ -23,19 +23,19 @@ jobs:
       # Build Backend
       - name: Build Backend Docker image
         run: |
-          docker build -t anime-timetable/mal-backend:latest -f ./anime_recommender/Dockerfile ./anime_recommender
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/mal-backend:latest -f ./anime_recommender/Dockerfile ./anime_recommender
 
       # Build Frontend
       - name: Build Frontend Docker image
         run: |
-          docker build -t anime-timetable/mal-frontend:latest -f ./anime_frontend/Dockerfile ./anime_frontend
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/mal-frontend:latest -f ./anime_frontend/Dockerfile ./anime_frontend
 
       # Push Backend
       - name: Push Backend Docker image
         run: |
-          docker push anime-timetable/mal-backend:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/mal-backend:latest
 
       # Push Frontend
       - name: Push Frontend Docker image
         run: |
-          docker push anime-timetable/mal-frontend:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/mal-frontend:latest
