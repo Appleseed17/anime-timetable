@@ -15,6 +15,9 @@ FROM nginx:stable-alpine
 #copies the app build into nginx
 COPY --from=build /app/build /usr/share/nginx/html
 
+#copy custom nginx config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 EXPOSE 80
 
 #Start Nginx
