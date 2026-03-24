@@ -2,7 +2,7 @@ import axios from "axios";
 
 //used for accessing front end endpoints
 
-const url = process.env.REACT_APP_API_URL
+const url = process.env.REACT_APP_API_URL || ""
 
 export async function getSeasonalAnime() {
   const response = await axios.get(`${url}/api/anime/seasonal/weekly`);
