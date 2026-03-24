@@ -20,6 +20,9 @@ public class NextAiring {
         DayOfWeek day_of_the_week,
         LocalTime start_time
     ){
+        if (day_of_the_week == null || start_time == null) {
+            this.next_airing = null;
+        }
 
         ZoneId jp = ZoneId.of("Asia/Tokyo");
         ZonedDateTime now = Instant.now().atZone(ZoneOffset.UTC);
