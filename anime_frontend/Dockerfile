@@ -7,7 +7,7 @@ RUN npm install
 
 #Copy entire project into /app
 COPY . .
-RUN npm start
+RUN npm run build
 
 #nginx web server, alpine linux
 FROM nginx:stable-alpine
