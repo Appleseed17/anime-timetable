@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -80,7 +79,7 @@ public class Anime {
         @Column(length = 5000)
         private String synopsis;
 
-        @ManyToMany(cascade = CascadeType.ALL)
+        @ManyToMany
         @JoinTable(
         name = "anime_genres",
         joinColumns = @JoinColumn(name = "anime_id"),
@@ -89,7 +88,7 @@ public class Anime {
         @OnDelete(action = OnDeleteAction.CASCADE)
         private List<Genre> genres;
 
-        @ManyToMany(cascade = CascadeType.ALL)
+        @ManyToMany
         @JoinTable(
         name = "anime_studios",
         joinColumns = @JoinColumn(name = "anime_id"),
