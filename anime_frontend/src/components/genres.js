@@ -49,11 +49,11 @@ export function AnimeGenres() {
 
         {/* Genre list */}
         {visibleGenres.map((g) => {
-          const isActive = location.pathname === `/anime/discover/${g.name}`;
+          const isActive = location.pathname === `/anime/discover/${encodeURIComponent(g.name)}`;
           return (
             <NavLink
               key={g.name}
-              to={`/anime/discover/${g.name}`}
+              to={`/anime/discover/${encodeURIComponent(g.name)}`}
               className={`
                 px-3 py-2 rounded-full text-sm font-semibold tracking-wide transition-all duration-300
                 border border-white/10
@@ -99,11 +99,11 @@ export function AnimeGenres() {
         </NavLink>
 
         {genres.map((g) => {
-          const isActive = location.pathname === `/anime/discover/${g.name}`;
+          const isActive = location.pathname === `/anime/discover/${encodeURIComponent(g.name)}`;
           return (
             <NavLink
               key={g.name}
-              to={`/anime/discover/${g.name}`}
+              to={`/anime/discover/${encodeURIComponent(g.name)}`}
               className={`
                 flex-shrink-0 px-3 py-2 rounded-full text-sm font-semibold tracking-wide transition-all duration-300
                 border border-white/10

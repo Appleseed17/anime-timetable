@@ -41,6 +41,7 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer>{
             ) 
         AND a.broadcast.day_of_the_week IS NOT NULL 
         AND a.broadcast.start_time IS NOT NULL 
+        
         AND a.media_type != 'music'
         ORDER BY a.broadcast.day_of_the_week ASC, a.broadcast.start_time ASC
     """)
@@ -52,7 +53,7 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer>{
     @Query("""
         SELECT a FROM Anime a
         WHERE a.rank IS NOT NULL
-            AND a.media_type != 'music'
+        AND a.media_type != 'music'
         ORDER BY a.rank ASC, a.num_list_users DESC
     """)
     Page<Anime> findMostPopular(
@@ -75,9 +76,9 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer>{
         FROM Anime a
         JOIN a.genres g
         WHERE g.name = :genreName
-            AND a.media_type != 'music'
-            AND a.rank IS NOT NULL
+        AND a.media_type != 'music'
         ORDER BY 
+            rank NULLS LAST,
             rank ASC, 
             num_list_users DESC
     """)
@@ -88,7 +89,6 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer>{
         FROM Anime a
         JOIN a.genres g
         WHERE a.media_type != 'music'
-            AND a.rank IS NOT NULL
         GROUP BY g.name
         ORDER BY count DESC
             """)
