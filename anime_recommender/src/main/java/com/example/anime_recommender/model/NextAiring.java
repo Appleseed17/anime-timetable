@@ -22,6 +22,7 @@ public class NextAiring {
     ){
         if (day_of_the_week == null || start_time == null) {
             this.next_airing = null;
+            return;
         }
 
         ZoneId jp = ZoneId.of("Asia/Tokyo");

@@ -55,7 +55,7 @@ public class AnimeApiRequests {
                  //covert to AnimeApiResponse                                                                
                 .bodyToMono(AnimeApiResponse.class)
                 .retryWhen( //retry logic
-                    Retry.backoff(3, Duration.ofSeconds(2))
+                    Retry.backoff(3, Duration.ofSeconds(500))
                     .filter(ex -> 
                         ex instanceof WebClientResponseException wce &&
                         wce.getStatusCode().is5xxServerError())
@@ -101,7 +101,7 @@ public class AnimeApiRequests {
                 //covert to Anime                                                              
                 .bodyToMono(Anime.class)
                 .retryWhen(
-                    Retry.backoff(3, Duration.ofSeconds(2))
+                    Retry.backoff(3, Duration.ofSeconds(500))
                     .filter(ex -> 
                         ex instanceof WebClientResponseException wce &&
                         wce.getStatusCode().is5xxServerError())
