@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -29,20 +31,23 @@ public class TotalAnimeFetch {
     private final AnimeApiRequests animeApiRequests; 
     private final ScheduleService scheduleService;
     private final PopularCacheService popularCacheService;
+    private final RabbitMessage rabbitMessage;
 
     public TotalAnimeFetch(
         AnimeRepository animeRepository, 
         AnimeApiRequests animeApiRequests, 
         ScheduleService scheduleService,
-        PopularCacheService popularCacheService
+        PopularCacheService popularCacheService,
+        RabbitMessage rabbitMessage
     ) {
         this.animeRepository = animeRepository;
         this.animeApiRequests = animeApiRequests;
         this.scheduleService = scheduleService;
         this.popularCacheService = popularCacheService;
+        this.rabbitMessage = rabbitMessage;
     }
     
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
     public void runOnStartup() {
         fetchSeasonalAnime();  // Run immediately once
     }
@@ -64,7 +69,7 @@ public class TotalAnimeFetch {
         try{
 
         animeApiRequests.saveSeasonalAnime(curr_year, month_field).get();
-
+        
         Instant beginning = Instant.now().minusSeconds(600);
         Instant end = Instant.now().plusSeconds(600);
         List<Integer> idList = animeRepository.findRecentQuery(beginning, end);
@@ -72,9 +77,11 @@ public class TotalAnimeFetch {
 
         List<CompletableFuture<Anime>> futures = new ArrayList<>();
         for (int id : idList) {
-            futures.add(animeApiRequests.fetchAnimeById(id)
-                .thenApply(anime -> animeRepository.save(anime))
-            );
+            System.out.println(id);
+            rabbitMessage.send(id);
+            // futures.add(animeApiRequests.fetchAnimeById(id)
+            //     .thenApply(anime -> animeRepository.save(anime))
+            // );
         }
 
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();

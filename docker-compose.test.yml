@@ -1,0 +1,77 @@
+version: "3.9"
+
+services:
+  backend:
+    image: mal-backend:test
+    container_name: mal-backend
+    restart: always
+    environment:
+      db_url: "jdbc:postgresql://db:5432/anime"
+      db_UserName: "postgres"
+      db_password: "password"
+      Client_ID: "8be4ba4167230dc6edad6126f2898943"
+      allowed_origins: "http://localhost"
+      rabbitmq_host: "rabbitmq"
+      rabbitmq_port: "5672"
+      rabbitmq_user: "admin"
+      rabbitmq_password: "password"
+    ports:
+      - "8080:8080"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      db:
+        condition: service_started
+    networks:
+      - app-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: "admin"
+      RABBITMQ_DEFAULT_PASS: "password"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+
+  db:
+    image: postgres:16
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_DB: anime
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"   
+    networks:
+      - app-network
+
+
+  frontend:
+    image: mal-frontend:test
+    container_name: mal-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+    environment:
+      REACT_APP_API_URL: ""
+
+networks:
+  app-network:
+    driver: bridge
