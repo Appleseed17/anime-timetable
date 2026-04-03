@@ -17,10 +17,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.example.anime_recommender.model.Anime;
+import com.example.anime_recommender.model.Message;
 import com.example.anime_recommender.model.Season;
 import com.example.anime_recommender.repository.AnimeRepository;
-
-import jakarta.annotation.PostConstruct;
 
 
 @Profile("!test")
@@ -53,7 +52,7 @@ public class TotalAnimeFetch {
     }
 
     //Retrieve current season of anime weekly
-    @Scheduled(cron ="0 0 2 ? * SUN") //2:00 am on Sundays
+    @Scheduled(cron ="0 0 2 ? * *") //2:00 am Everyday
     public ResponseEntity<String> fetchSeasonalAnime(){
         TimeService timeService  = new TimeService();
 
@@ -78,19 +77,13 @@ public class TotalAnimeFetch {
         List<CompletableFuture<Anime>> futures = new ArrayList<>();
         for (int id : idList) {
             System.out.println(id);
-            rabbitMessage.send(id);
-            // futures.add(animeApiRequests.fetchAnimeById(id)
-            //     .thenApply(anime -> animeRepository.save(anime))
-            // );
+            rabbitMessage.send(new Message("ANIME_ID", id));
         }
+        rabbitMessage.send(new Message("BATCH_COMPLETE",-1));
 
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
 
         animeRepository.deleteOldEntries(Instant.now().minus(6, ChronoUnit.DAYS));
-
-        scheduleService.refreshCache();
-        popularCacheService.refreshPopularPage();
-        popularCacheService.refreshPopularDiscover();
 
         System.out.println("weekly anime fetch complete");
         return ResponseEntity.ok().build();
