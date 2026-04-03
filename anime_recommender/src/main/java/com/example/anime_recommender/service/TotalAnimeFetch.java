@@ -28,8 +28,6 @@ public class TotalAnimeFetch {
 
     private final AnimeRepository animeRepository;
     private final AnimeApiRequests animeApiRequests; 
-    private final ScheduleService scheduleService;
-    private final PopularCacheService popularCacheService;
     private final RabbitMessage rabbitMessage;
 
     public TotalAnimeFetch(
@@ -41,8 +39,6 @@ public class TotalAnimeFetch {
     ) {
         this.animeRepository = animeRepository;
         this.animeApiRequests = animeApiRequests;
-        this.scheduleService = scheduleService;
-        this.popularCacheService = popularCacheService;
         this.rabbitMessage = rabbitMessage;
     }
     
