@@ -11,6 +11,7 @@ This is project is both a passion project to create something that I find to be 
 - Spring Boot
 - PostgreSQL
 - Maven
+- RabbitMQ
 
 ### Frontend
 - Javascript
