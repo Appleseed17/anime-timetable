@@ -26,8 +26,13 @@ public class ScheduleService {
 
     @Transactional
     public void refreshCache() {
-        LocalDate startDate = LocalDate.of(2026, 1, 11);
+        int day = LocalDate.now().getDayOfYear();
+        int year = LocalDate.now().getYear();
+        LocalDate startDate = LocalDate.ofYearDay(year, day);
         LocalDate endDate = startDate.plusDays(7);
+
+        System.out.println(startDate);
+        System.out.println(endDate);
 
         List<Anime> animeList = animeRepository.findWeeklyAnime(startDate, endDate);
 
